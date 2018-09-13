@@ -1,20 +1,20 @@
 'use strict';
-
-const util = require('util');
-
-exports.or = (v, alt) => v != null ? v : alt;
-exports.and = (v, alt) => v == null ? null : alt == null ? null : alt;
-exports.compliment = fn => (...args) => !fn(...args);
-exports.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
-exports.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
-exports.compose = (first, ...rest) => (...args) => rest.reduce((acc, fn) => fn(acc), first(...args));
-exports.pipe = (...fns) => (...args) => compose(...fns.reverse())(...args);
-
-exports.isObject = v => v != null
-    && typeof v === 'object'
-    && v.constructor
-    && v.constructor.name === 'Object';
-
-exports.isPlainObject = v => exports.isObject(v)
-    && !util.types.isArgumentsObject(v) // Object.prototype.toString.call(v) === '[object Arguments]' 
-    && !util.types.isProxy(v);
+const e = exports;
+e.falsy = v => v == null || v === false;
+e.truthy = v => v != null && v !== false;
+e.or = (v, alt) => e.truthy(v) ? v : alt;
+e.and = (v, alt) => e.falsy(v) ? v : alt;
+e.complement = fn => (...args) => !fn(...args);
+e.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
+e.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
+e.pipe = (first, ...rest) => (...args) => rest.reduce((acc, fn) => fn(acc), first(...args));
+e.compose = (...fns) => (...args) => e.pipe(...fns.reverse())(...args);
+e.is = (t, v) => typeof v === t;
+e.isString = v => typeof v === 'string';
+e.isNumber = v => typeof v === 'number';
+e.isBoolean = v => typeof v === 'boolean';
+e.isUndefined = v => typeof v === 'undefined';
+e.isNull = v => v === null;
+e.isNil = v => v == null;
+e.isObject = v => v != null && typeof v === 'object';
+e.isPlainObject = v => Object.prototype.toString.call(v) === '[object Object]';
