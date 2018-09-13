@@ -1,6 +1,6 @@
 {
   "name": "needful",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "a few tiny functions to help you do the needful",
   "main": "index.js",
   "scripts": {
