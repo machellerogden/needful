@@ -7,10 +7,7 @@ exports.complement = fn => (...args) => !fn(...args);
 exports.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
 exports.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
 exports.pipe = (first, ...rest) => (...args) => rest.reduce((acc, fn) => fn(acc), first(...args));
-exports.compose = (...fns) => {
-    const f = [...fns].reverse();
-    return (...args) => exports.pipe(...f)(...args);
-};
+exports.compose = (...fns) => ((f) => (...args) => exports.pipe(...f)(...args))(fns.reverse());
 exports.is = (t, v) => typeof v === t;
 exports.isString = v => typeof v === 'string';
 exports.isNumber = v => typeof v === 'number';

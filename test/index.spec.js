@@ -113,6 +113,7 @@ describe('#compose', () => {
         const barify = (v) => `${v}-bar`;
         const bazify = (v) => `${v}-baz`;
         expect(compose(bazify, barify, fooify)('xxx')).to.equal('xxx-foo-bar-baz');
+        expect(compose(bazify, barify, fooify)('xxx')).to.equal('xxx-foo-bar-baz');
     });
 });
 
