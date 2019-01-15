@@ -21,7 +21,8 @@ exports.isObject = v => v != null && typeof v === 'object';
 exports.isPlainObject = v => Object.prototype.toString.call(v) === '[object Object]';
 exports.shallow = v => !exports.isObject(v) && v || Array.isArray(v) ? [ ...v ] : { ...v };
 
-// some ugly but useful little fns for working with objects -- here be dragons: gigo
+// mutating in the name of immutability
+// here be dragons... gigo
 exports.keypath = v => {
     if (Array.isArray(v)) return exports.shallow(v);
     const chars = v.split('');
@@ -79,15 +80,11 @@ exports.walk = (o, p, fn) => {
     fn(cursor, last, true);
     return result;
 };
-exports.assoc = (o, p, v) => {
-    return exports.walk(o, p, (cursor, k, last) => last
-        ? cursor[k] = v
-        : cursor[k] = exports.shallow(cursor[k]));
-};
-exports.dissoc = (o, p) => {
-    return exports.walk(o, p, (cursor, k, last) => last
-        ? Array.isArray(cursor)
-            ? cursor.splice(last, cursor.length)
-            : (delete cursor[last])
-        : cursor[k] = exports.shallow(cursor[k]));
-};
+exports.assoc = (o, p, v) => exports.walk(o, p, (cursor, k, last) => last
+    ? cursor[k] = v
+    : cursor[k] = exports.shallow(cursor[k]));
+exports.dissoc = (o, p) => exports.walk(o, p, (cursor, k, last) => last
+    ? Array.isArray(cursor)
+        ? cursor.splice(last, cursor.length)
+        : (delete cursor[last])
+    : cursor[k] = exports.shallow(cursor[k]));
