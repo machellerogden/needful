@@ -3,8 +3,6 @@
 const chai = require('chai');
 const { expect } = chai;
 
-const keypath = require('../keypath');
-
 const {
     complement,
     falsy,
@@ -18,8 +16,10 @@ const {
     isObject,
     isPlainObject,
     get,
-    set,
-    has
+    has,
+    assoc,
+    dissoc,
+    keypath
 } = require('..');
 
 describe('#complement', () => {
@@ -200,9 +200,16 @@ describe('#has', () => {
     });
 });
 
-describe('#set', () => {
-    it('set value at given path', () => {
-        expect(set({ foo: { bar: 'baz' } }, 'foo.bar', 'qux')).to.eql({ foo: { bar: 'qux' } });
-        expect(set({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]', 'foo')).to.eql({ foo: { bar: [ 'baz', 'foo' ] } });
+describe('#assoc', () => {
+    it('assoc value at given path', () => {
+        expect(assoc({ foo: { bar: 'baz' } }, 'foo.bar', 'qux')).to.eql({ foo: { bar: 'qux' } });
+        expect(assoc({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]', 'foo')).to.eql({ foo: { bar: [ 'baz', 'foo' ] } });
+    });
+});
+
+describe('#dissoc', () => {
+    it('dissoc value at given path', () => {
+        //expect(dissoc({ foo: { bar: 'baz' } }, 'foo.bar')).to.eql({ foo: {} });
+        expect(dissoc({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]')).to.eql({ foo: { bar: [ 'baz' ] } });
     });
 });
