@@ -18,21 +18,19 @@ exports.isNull = v => v === null;
 exports.isNil = v => v == null;
 exports.isObject = v => v != null && typeof v === 'object';
 exports.isPlainObject = v => Object.prototype.toString.call(v) === '[object Object]';
-exports.get = (o, p) => (Array.isArray(p) ? p : keypath(p)).reduce((a, k) => (exports.isObject(a) && a[k] || void 0), o);
+exports.shallow = v => !exports.isObject(v) && v || Array.isArray(v) ? [ ...v ] : { ...v };
+exports.get = (o, p) => keypath(p).reduce((a, k) => (exports.isObject(a) && a[k] || void 0), o);
 exports.has = (o, p) => exports.get(o, p) != null;
 exports.set = (o, p, v) => {
     if (!exports.isObject(o)) return o;
-    const result = Array.isArray(o)
-        ? [ ...o ]
-        : { ...o };
-    const kp = [ ...(Array.isArray(p)
-        ? p
-        : keypath(p)) ];
+    const result = exports.shallow(o);
+    const kp = keypath(p);
     let cursor = result;
     let last = kp.pop();
     while (kp.length) {
-        let c = kp.shift();
-        cursor = cursor[c];
+        let current = kp.shift();
+        cursor[current] = exports.shallow(cursor[current]);
+        cursor = cursor[current];
     }
     cursor[last] = v;
     return result;

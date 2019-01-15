@@ -1,6 +1,7 @@
-// wherein we build a wee little reader for turning strings into keypath arrays
-// here be dragons: bad input may yield unexpected results
+// wherein we build a wee little reader for turning a string into a keypath array
+// here be dragons: gigo
 module.exports = v => {
+    if (Array.isArray(v)) return [ ...v ];
     const chars = v.split('');
     const result = [ '' ];
     let i = 0;
@@ -33,7 +34,7 @@ module.exports = v => {
             result.push(value);
             continue;
         }
-        result[result.length - 1] = result[result.length - 1] + chars[i];
+        result[result.length - 1] += chars[i];
         i++;
     }
     return result;

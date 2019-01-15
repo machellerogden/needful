@@ -202,5 +202,6 @@ describe('#has', () => {
 describe('#set', () => {
     it('set value at given path', () => {
         expect(set({ foo: { bar: 'baz' } }, 'foo.bar', 'qux')).to.eql({ foo: { bar: 'qux' } });
+        expect(set({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]', 'foo')).to.eql({ foo: { bar: [ 'baz', 'foo' ] } });
     });
 });
