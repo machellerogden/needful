@@ -1,30 +1,36 @@
 'use strict';
+const _ = exports;
 
-// core utility fns
-exports.falsy = v => v == null || v === false;
-exports.truthy = v => v != null && v !== false;
-exports.or = (v, alt) => v != null && v !== false ? v : alt;
-exports.and = (v, alt) => v == null || v === false ? v : alt;
-exports.complement = fn => (...args) => !fn(...args);
-exports.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
-exports.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
-exports.pipe = (first, ...rest) => (...args) => rest.reduce((acc, fn) => fn(acc), first(...args));
-exports.compose = (...fns) => ((f) => (...args) => exports.pipe(...f)(...args))([ ...fns ].reverse());
-exports.is = (t, v) => typeof v === t;
-exports.isString = v => typeof v === 'string';
-exports.isNumber = v => typeof v === 'number';
-exports.isBoolean = v => typeof v === 'boolean';
-exports.isUndefined = v => typeof v === 'undefined';
-exports.isNull = v => v === null;
-exports.isNil = v => v == null;
-exports.isObject = v => v != null && typeof v === 'object';
-exports.isPlainObject = v => Object.prototype.toString.call(v) === '[object Object]';
-exports.shallow = v => !exports.isObject(v) && v || Array.isArray(v) ? [ ...v ] : { ...v };
+// logical truthiness
+_.falsy = v => v == null || v === false;
+_.truthy = v => v != null && v !== false;
+_.or = (v, alt) => v != null && v !== false ? v : alt;
+_.and = (v, alt) => v == null || v === false ? v : alt;
 
-// mutating in the name of immutability
-// here be dragons... gigo
-exports.keypath = v => {
-    if (Array.isArray(v)) return exports.shallow(v);
+// partial application
+_.complement = fn => (...args) => !fn(...args);
+_.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
+_.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
+
+// functional composition
+_.pipe = (first, ...rest) => (...args) => rest.reduce((acc, fn) => fn(acc), first(...args));
+_.compose = (...fns) => ((f) => (...args) => _.pipe(...f)(...args))([ ...fns ].reverse());
+
+// types
+_.is = (v, t) => typeof v === t;
+_.isString = v => _.is(v, 'string');
+_.isNumber = v => _.is(v, 'number');
+_.isBoolean = v => _.is(v, 'boolean');
+_.isUndefined = v => _.is(v, 'undefined');
+_.isNull = v => v === null;
+_.isNil = v => v == null;
+_.isObject = v => v != null && _.is(v, 'object');
+_.isPlainObject = v => Object.prototype.toString.call(v) === '[object Object]';
+
+// objects
+_.shallow = v => !_.isObject(v) && v || Array.isArray(v) ? [ ...v ] : { ...v };
+_.keypath = v => {
+    if (Array.isArray(v)) return _.shallow(v);
     const chars = v.split('');
     const result = [ '' ];
     let i = 0;
@@ -65,12 +71,12 @@ exports.keypath = v => {
     }
     return result;
 };
-exports.get = (o, p) => exports.keypath(p).reduce((a, k) => (exports.isObject(a) && a[k] || void 0), o);
-exports.has = (o, p) => exports.get(o, p) != null;
-exports.walk = (o, p, fn) => {
-    const result = exports.shallow(o);
+_.get = (o, p) => _.keypath(p).reduce((a, k) => (_.isObject(a) && a[k] || void 0), o);
+_.has = (o, p) => _.get(o, p) != null;
+_.walk = (o, p, fn) => {
+    const result = _.shallow(o);
     let cursor = result;
-    const kp = exports.keypath(p);
+    const kp = _.keypath(p);
     let last = kp.pop();
     while (kp.length) {
         let current = kp.shift();
@@ -80,11 +86,11 @@ exports.walk = (o, p, fn) => {
     fn(cursor, last, true);
     return result;
 };
-exports.assoc = (o, p, v) => exports.walk(o, p, (cursor, k, last) => last
+_.assoc = (o, p, v) => _.walk(o, p, (cursor, k, last) => last
     ? cursor[k] = v
-    : cursor[k] = exports.shallow(cursor[k]));
-exports.dissoc = (o, p) => exports.walk(o, p, (cursor, k, last) => last
+    : cursor[k] = _.shallow(cursor[k]));
+_.dissoc = (o, p) => _.walk(o, p, (cursor, k, last) => last
     ? Array.isArray(cursor)
         ? cursor.splice(last, cursor.length)
         : (delete cursor[last])
-    : cursor[k] = exports.shallow(cursor[k]));
+    : cursor[k] = _.shallow(cursor[k]));

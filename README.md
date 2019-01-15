@@ -1,6 +1,6 @@
 # Needful
 
-> A teensy tiny little FP library.
+> A 4kb FP library for the 80% use case.
 
 ## Why not use ramda / lodash / underscore?
 
