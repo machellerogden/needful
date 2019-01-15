@@ -3,6 +3,8 @@
 const chai = require('chai');
 const { expect } = chai;
 
+const keypath = require('../keypath');
+
 const {
     complement,
     falsy,
@@ -14,7 +16,10 @@ const {
     pipe,
     compose,
     isObject,
-    isPlainObject
+    isPlainObject,
+    get,
+    set,
+    has
 } = require('..');
 
 describe('#complement', () => {
@@ -166,3 +171,36 @@ describe('#isPlainObject', () => {
     });
 });
 
+describe('#keypath', () => {
+    it('returns array representing a keypath for a given keypath string', () => {
+        expect(keypath('foo.bar')).to.eql([ 'foo', 'bar' ]);
+        expect(keypath('foo["bar"]')).to.eql([ 'foo', 'bar' ]);
+        expect(keypath('foo[\'bar\']')).to.eql([ 'foo', 'bar' ]);
+        expect(keypath('foo[bar]')).to.eql([ 'foo', 'bar' ]);
+        expect(keypath('foo[0]')).to.eql([ 'foo', 0 ]);
+    });
+});
+
+describe('#get', () => {
+    it('returns value at given path', () => {
+        expect(get({ foo: { bar: 'baz' } }, 'foo.bar')).to.equal('baz');
+        expect(get({ foo: { bar: 'baz' } }, 'foo["bar"]')).to.equal('baz');
+        expect(get({ foo: [ "bar", { baz: "qux" } ] }, 'foo[1].baz')).to.equal('qux');
+        expect(get({ foo: { bar: 'baz' } }, [ 'foo', 'bar' ])).to.equal('baz');
+        expect(get({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 1, 'baz' ])).to.equal('qux');
+        expect(get({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 2, 'does', 'not', 'exist' ])).to.be.undefined;
+    });
+});
+
+describe('#has', () => {
+    it('returns value at given path', () => {
+        expect(has({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 1, 'baz' ])).to.be.true;
+        expect(has({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 1, 'qux' ])).to.be.false;
+    });
+});
+
+describe('#set', () => {
+    it('set value at given path', () => {
+        expect(set({ foo: { bar: 'baz' } }, 'foo.bar', 'qux')).to.eql({ foo: { bar: 'qux' } });
+    });
+});
