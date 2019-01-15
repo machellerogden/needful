@@ -209,7 +209,7 @@ describe('#assoc', () => {
 
 describe('#dissoc', () => {
     it('dissoc value at given path', () => {
-        //expect(dissoc({ foo: { bar: 'baz' } }, 'foo.bar')).to.eql({ foo: {} });
+        expect(dissoc({ foo: { bar: 'baz' } }, 'foo.bar')).to.eql({ foo: {} });
         expect(dissoc({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]')).to.eql({ foo: { bar: [ 'baz' ] } });
     });
 });

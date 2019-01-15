@@ -92,5 +92,5 @@ _.assoc = (o, p, v) => _.walk(o, p, (cursor, k, last) => last
 _.dissoc = (o, p) => _.walk(o, p, (cursor, k, last) => last
     ? Array.isArray(cursor)
         ? cursor.splice(last, cursor.length)
-        : (delete cursor[last])
+        : (delete cursor[k])
     : cursor[k] = _.shallow(cursor[k]));
