@@ -175,7 +175,8 @@ describe('#keypath', () => {
     it('returns array representing a keypath for a given keypath string', () => {
         expect(keypath('foo.bar')).to.eql([ 'foo', 'bar' ]);
         expect(keypath('foo["bar"]')).to.eql([ 'foo', 'bar' ]);
-        expect(keypath('foo[\'bar\']')).to.eql([ 'foo', 'bar' ]);
+        expect(keypath('foo["b\\"ar"]')).to.eql([ 'foo', 'b\\"ar' ]);
+        expect(keypath("foo['bar']")).to.eql([ 'foo', 'bar' ]);
         expect(keypath('foo[bar]')).to.eql([ 'foo', 'bar' ]);
         expect(keypath('foo[0]')).to.eql([ 'foo', 0 ]);
     });

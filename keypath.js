@@ -20,7 +20,10 @@ module.exports = v => {
             let value = '';
             if ([ "'", '"' ].includes(chars[i])) {
                 const q = chars[i++];
-                while (chars[i] !== q) value += chars[i++];
+                while (chars[i] !== q) {
+                    if (chars[i] === '\\') value += chars[i++];
+                    value += chars[i++];
+                }
                 i++;
                 result.push(value);
                 continue;
