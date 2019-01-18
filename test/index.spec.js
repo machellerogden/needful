@@ -204,6 +204,9 @@ describe('#assoc', () => {
     it('assoc value at given path', () => {
         expect(assoc({ foo: { bar: 'baz' } }, 'foo.bar', 'qux')).to.eql({ foo: { bar: 'qux' } });
         expect(assoc({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]', 'foo')).to.eql({ foo: { bar: [ 'baz', 'foo' ] } });
+        expect(assoc({}, 'foo.bar[1]', 'foo')).to.eql({ foo: { bar: [ void 0, 'foo' ] } });
+        expect(assoc({}, 'foo.bar[1].qux', 'xyzzy')).to.eql({ foo: { bar: [ void 0, { qux: 'xyzzy' } ] } });
+        expect(assoc([], '[0].qux', 'xyzzy')).to.eql([ { qux: 'xyzzy' } ]);
     });
 });
 

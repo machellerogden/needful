@@ -45,6 +45,7 @@ _.keypath = v => {
             continue;
         }
         if (chars[i] === '[') {
+            let edge = i === 0;
             i++;
             let value = '';
             if ([ "'", '"' ].includes(chars[i])) {
@@ -54,12 +55,20 @@ _.keypath = v => {
                     value += chars[i++];
                 }
                 i++;
-                result.push(value);
+                if (edge) {
+                    result[result.length - 1] += value;
+                } else {
+                    result.push(value);
+                }
                 continue;
             }
             if (/[0-9]/.test(chars[i])) {
                 while (chars[i] !== ']') value += chars[i++];
-                result.push(+value);
+                if (edge) {
+                    result[result.length - 1] += +value;
+                } else {
+                    result.push(+value);
+                }
                 continue;
             }
             while (chars[i] !== ']') value += chars[i++];
@@ -74,23 +83,22 @@ _.keypath = v => {
 _.get = (o, p) => _.keypath(p).reduce((a, k) => (_.isObject(a) && a[k] || void 0), o);
 _.has = (o, p) => _.get(o, p) != null;
 _.walk = (o, p, fn) => {
+    const kp = _.keypath(p);
     const result = _.shallow(o);
     let cursor = result;
-    const kp = _.keypath(p);
-    let last = kp.pop();
     while (kp.length) {
         let current = kp.shift();
-        fn(cursor, current, false);
-        cursor = cursor[current];
+        let next = kp[0];
+        fn(cursor, current, next);
+        if (next != null) cursor = cursor[current];
     }
-    fn(cursor, last, true);
     return result;
 };
-_.assoc = (o, p, v) => _.walk(o, p, (cursor, k, last) => last
+_.assoc = (o, p, v) => _.walk(o, p, (cursor, k, next) => next == null
     ? cursor[k] = v
-    : cursor[k] = _.shallow(cursor[k]));
-_.dissoc = (o, p) => _.walk(o, p, (cursor, k, last) => last
+    : cursor[k] = _.shallow(cursor[k] == null && typeof next === 'number' ? [] : cursor[k]));
+_.dissoc = (o, p) => _.walk(o, p, (cursor, k, next) => next == null
     ? Array.isArray(cursor)
-        ? cursor.splice(last, cursor.length)
+        ? cursor.splice(next == null, cursor.length)
         : (delete cursor[k])
     : cursor[k] = _.shallow(cursor[k]));
