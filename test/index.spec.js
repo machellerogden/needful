@@ -12,12 +12,14 @@ const {
     partial,
     partialRight,
     pipe,
-    vpipe, // TODO
+    vpipe,
     compose,
     isObject,
     isPlainObject,
     get,
     has,
+    set, // TODO
+    drop, // TODO
     assoc,
     dissoc,
     keypath,
@@ -48,8 +50,27 @@ const {
     some, // TODO
     values, // TODO
     shallow, // TODO
-    isEmpty // TODO
+    isEmpty, // TODO
+    eql,
+    equal,
+    merge
 } = require('..');
+
+describe('#eql', () => {
+    it('compares values with loose equality', () => {
+        expect(eql('foo', 'foo')).to.be.true;
+        expect(eql({ foo: 'bar' }, { foo: 'bar' })).to.be.true;
+    });
+});
+
+describe('#equal', () => {
+    it('compares values with strict equality', () => {
+        expect(equal('foo', 'foo')).to.be.true;
+        expect(equal({ foo: 'bar' }, { foo: 'bar' })).to.be.false;
+        const foo = { foo: 'bar' };
+        expect(eql(foo, foo)).to.be.true;
+    });
+});
 
 describe('#complement', () => {
     it('takes a given function and returns a new function which will return the opposite truth value', () => {
@@ -144,6 +165,15 @@ describe('#pipe', () => {
         const barify = (v) => `${v}-bar`;
         const bazify = (v) => `${v}-baz`;
         expect(pipe(fooify, barify, bazify)('xxx')).to.equal('xxx-foo-bar-baz');
+    });
+});
+
+describe('#vpipe', () => {
+    it('performs left-to-right function composition', () => {
+        const fooify = (v) => `${v}-foo`;
+        const barify = (v) => `${v}-bar`;
+        const bazify = (v) => `${v}-baz`;
+        expect(vpipe('xxx', fooify, barify, bazify)).to.equal('xxx-foo-bar-baz');
     });
 });
 
@@ -254,5 +284,18 @@ describe('#dissoc', () => {
     it('dissoc value at given path', () => {
         expect(dissoc({ foo: { bar: 'baz' } }, 'foo.bar')).to.eql({ foo: {} });
         expect(dissoc({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]')).to.eql({ foo: { bar: [ 'baz' ] } });
+    });
+});
+
+describe('#merge', () => {
+    it('merge objects', () => {
+        expect(merge({ foo: { bar: 'baz' } }, { foo: { qux: 'xyzzy' } })).to.eql({ foo: { bar: 'baz', qux: 'xyzzy' } });
+    });
+});
+
+describe('#entries', () => {
+    it('gets kv pairs for given object ', () => {
+        expect(entries({ foo: 'bar', baz: 'qux' })).to.eql([ [ 'foo', 'bar' ], [ 'baz', 'qux' ] ]);
+        expect(entries([ 'foo', 'bar' ])).to.eql([ [ 0, 'foo' ], [ 1, 'bar' ] ]);
     });
 });
