@@ -1,30 +1,41 @@
 'use strict';
 const _ = exports;
 
+_.nil = void 0;
+[
+    'fill',
+    'pop',
+    'push',
+    'reverse',
+    'shift',
+    'sort',
+    'splice',
+    'unshift',
+    'concat',
+    'includes',
+    'indexOf',
+    'join',
+    'lastIndexOf',
+    'slice',
+    'entries',
+    'every',
+    'filter',
+    'find',
+    'findIndex',
+    'forEach',
+    'keys',
+    'map',
+    'reduce',
+    'reduceRight',
+    'some',
+    'values'
+].forEach(k => _[k] = (v, ...args) => [][k].apply([ ...(v || []) ], args));
 _.not = v => !v;
-_.afn = (k, m) => (v, ...args) => [][k].apply(m ? [ ...v ] : v, args);
-_.fill = _.afn('fill', true);
-_.pop = _.afn('pop', true);
-_.push = _.afn('push', true);
-_.reverse = _.afn('reverse', true);
-_.shift = _.afn('shift', true);
-_.sort = _.afn('sort', true);
-_.splice = _.afn('splice', true);
-_.unshift = _.afn('unshift', true);
-_.concat = _.afn('concat');
-_.includes = _.afn('includes');
-_.indexOf = _.afn('indexOf');
-_.join = _.afn('join');
-_.lastIndexOf = _.afn('lastIndexOf');
-_.slice = _.afn('slice');
-_.map = _.afn('map');
-_.reduce = _.afn('reduce');
-_.comp = fn => (...args) => !fn(...args);
-_.p = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
-_.pr = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
+_.complement = fn => (...args) => !fn(...args);
+_.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
+_.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
 _.eql = (a, b) => a == b;
 _.equal = (a, b) => a === b;
-_.nil = void 0;
 _.isNil = v => _.eql(v, _.nil);
 _.isFalse = v => _.equal(v, false);
 _.falsy = v => _.isNil(v) || _.isFalse(v);
@@ -34,7 +45,7 @@ _.and = (...args) => _.reduce(args, (a, b) => _.falsy(a)
 _.or = (...args) => _.reduce(args, (a, b) => _.falsy(a)
     ? b
     : a);
-_.truthy = _.comp(_.falsy);
+_.truthy = _.complement(_.falsy);
 _.is = (v, t) => _.equal(typeof v, t);
 _.isString = v => _.is(v, 'string');
 _.isNumber = v => _.is(v, 'number');
@@ -98,7 +109,7 @@ _.keypath = v => {
     }
     return result;
 };
-_.get = (o, p) => _.vpipe(p, _.keypath, _.pr(_.reduce, (a, k) => _.or(_.isObject(a) && a[k], _.nil), o));
+_.get = (o, p) => _.vpipe(p, _.keypath, _.partialRight(_.reduce, (a, k) => _.or(_.isObject(a) && a[k], _.nil), o));
 _.has = (o, p) => _.vpipe(_.get(o, p), _.isNil, _.not);
 _.walk = (o, p, fn) => {
     const kp = _.keypath(p);

@@ -4,14 +4,15 @@ const chai = require('chai');
 const { expect } = chai;
 
 const {
-    comp:complement,
+    complement,
     falsy,
     truthy,
     or,
     and,
-    p:partial,
-    pr:partialRight,
+    partial,
+    partialRight,
     pipe,
+    vpipe, // TODO
     compose,
     isObject,
     isPlainObject,
@@ -19,7 +20,35 @@ const {
     has,
     assoc,
     dissoc,
-    keypath
+    keypath,
+    fill, // TODO
+    pop, // TODO
+    push, // TODO
+    reverse, // TODO
+    shift, // TODO
+    sort, // TODO
+    splice, // TODO
+    unshift, // TODO
+    concat, // TODO
+    includes, // TODO
+    indexOf, // TODO
+    join, // TODO
+    lastIndexOf, // TODO
+    slice, // TODO
+    entries, // TODO
+    every, // TODO
+    filter, // TODO
+    find, // TODO
+    findIndex, // TODO
+    forEach, // TODO
+    keys, // TODO
+    map, // TODO
+    reduce, // TODO
+    reduceRight, // TODO
+    some, // TODO
+    values, // TODO
+    shallow, // TODO
+    isEmpty // TODO
 } = require('..');
 
 describe('#complement', () => {
