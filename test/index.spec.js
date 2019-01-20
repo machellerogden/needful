@@ -271,10 +271,10 @@ describe('#assoc', () => {
         expect(assoc({ foo: { bar: 'baz' } }, 'foo.bar', 'qux')).to.eql({ foo: { bar: 'qux' } });
         expect(assoc({ foo: { bar: [ 'baz', 'qux' ] } }, 'foo.bar[1]', 'foo')).to.eql({ foo: { bar: [ 'baz', 'foo' ] } });
         expect(assoc({}, 'foo.bar[1]', 'foo')).to.eql({ foo: { bar: [ void 0, 'foo' ] } });
-        //expect(assoc({}, 'foo.bar[1].qux', 'xyzzy')).to.eql({ foo: { bar: [ void 0, { qux: 'xyzzy' } ] } });
-        //expect(assoc([], '[0].qux', 'xyzzy')).to.eql([ { qux: 'xyzzy' } ]);
-        //expect(assoc([], '[1].qux', 'xyzzy')).to.eql([ void 0, { qux: 'xyzzy' } ]);
-        //expect(assoc([], '[0]', 'xyzzy')).to.eql([ 'xyzzy' ]);
+        expect(assoc({}, 'foo.bar[1].qux', 'xyzzy')).to.eql({ foo: { bar: [ void 0, { qux: 'xyzzy' } ] } });
+        expect(assoc([], '[0].qux', 'xyzzy')).to.eql([ { qux: 'xyzzy' } ]);
+        expect(assoc([], '[1].qux', 'xyzzy')).to.eql([ void 0, { qux: 'xyzzy' } ]);
+        expect(assoc([], '[0]', 'xyzzy')).to.eql([ 'xyzzy' ]);
         //expect(assoc(null, '[0]', 'xyzzy')).to.eql([ 'xyzzy' ]);
         //expect(assoc(null, 'foo', 'bar')).to.eql({ foo: 'bar' });
     });
@@ -290,6 +290,7 @@ describe('#dissoc', () => {
 describe('#merge', () => {
     it('merge objects', () => {
         expect(merge({ foo: { bar: 'baz' } }, { foo: { qux: 'xyzzy' } })).to.eql({ foo: { bar: 'baz', qux: 'xyzzy' } });
+        expect(merge({ foo: { bar: 'baz', qux: [ 'foo' ] } }, { foo: { qux: [ void 0, 'xyzzy' ], bam: 'boom' } })).to.eql({ foo: { bar: 'baz', qux: [ 'foo', 'xyzzy' ], bam: 'boom' } });
     });
 });
 
