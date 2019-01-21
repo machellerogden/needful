@@ -1,8 +1,7 @@
 'use strict';
 const _ = exports;
-
-_.nil = void 0;
-[   'fill',
+[
+    'fill',
     'pop',
     'push',
     'reverse',
@@ -10,12 +9,9 @@ _.nil = void 0;
     'sort',
     'splice',
     'unshift'
-].forEach(k => _[k] = (v, ...args) => {
-    const r = [ ...(v || []) ];
-    [][k].apply(r, args);
-    return r;
-});
-[   'concat',
+].forEach((k, r) => _[k] = (v, ...args) => (r = [ ...(v || []) ], [][k].apply(r, args), r));
+[
+    'concat',
     'includes',
     'indexOf',
     'join',
@@ -31,12 +27,12 @@ _.nil = void 0;
     'reduceRight',
     'some'
 ].forEach(k => _[k] = (v, ...args) => [][k].apply(v || [], args));
-[   'entries',
+[
+    'entries',
     'keys',
     'values'
-].forEach(k => _[k] = (v) => Array.isArray(v)
-    ? [ ...[][k].apply(v || []) ]
-    : Object[k](v));
+].forEach(k => _[k] = (v) => Array.isArray(v) ? [ ...[][k].apply(v || []) ] : Object[k](v));
+_.nil = void 0;
 _.not = v => !v;
 _.complement = fn => (...args) => !fn(...args);
 _.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
@@ -61,12 +57,6 @@ _.isNil = v => _.eql(v, _.nil);
 _.notNil = _.complement(_.isNil);
 _.isFalse = v => _.equal(v, false);
 _.falsy = v => _.isNil(v) || _.isFalse(v);
-_.and = (...args) => _.reduce(args, (a, b) => _.falsy(a)
-    ? a
-    : b);
-_.or = (...args) => _.reduce(args, (a, b) => _.falsy(a)
-    ? b
-    : a);
 _.truthy = _.complement(_.falsy);
 _.is = (v, t) => _.equal(typeof v, t);
 _.isString = v => _.is(v, 'string');
@@ -75,7 +65,7 @@ _.isBoolean = v => _.is(v, 'boolean');
 _.isUndefined = v => _.is(v, 'undefined');
 _.isNull = v => _.equal(v, null);
 _.isArray = Array.isArray;
-_.isObject = v => _.and(!_.isNil(v), _.is(v, 'object'));
+_.isObject = v => !_.isNil(v) && _.is(v, 'object');
 _.isPlainObject = v => _.equal(Object.prototype.toString.call(v), '[object Object]');
 _.pipe = (first, ...rest) => (...args) => _.reduce(rest, (acc, fn) => fn(acc), first(...args));
 _.vpipe = (v, ...rest) => _.pipe(...rest)(v);
@@ -91,54 +81,41 @@ _.isEmpty = v => _.isArray(v) || _.isString(v)
         ? !Object.keys(v).length
         : _.isNil(v);
 _.keypath = v => {
-    if (_.isArray(v)) return _.shallow(v);
+    if (_.isArray(v)) return [ ...v ];
     const chars = ('' + v).split('');
-    const result = [ '' ];
+    const result = [];
+    let value = '';
     let i = 0;
+    const set = v => (result.push(/^[0-9]+$/.test(v) ? +v : v), value = '');
     while (i < chars.length) {
-        let edge = i === 0;
-        if (chars[i] === '.') {
-            result.push('');
-            i++;
-        } else if (chars[i] === ']') {
-            i++;
-        } else if (chars[i] === '[') {
-            i++;
-            let value = '';
-            let q;
-            if ([ "'", '"' ].includes(chars[i])) {
-                q = chars[i++];
-                while (chars[i] !== q) {
-                    if (chars[i] === '\\') value += chars[i++];
-                    value += chars[i++];
-                }
-                i++;
-            } else {
-               while (chars[i] !== ']') value += chars[i++];
+        if ([ '.', '[', ']' ].includes(chars[i])) {
+            if (i++ === 0) continue;
+            if (chars[i - 2] !== ']') set(value);
+        } else if ([ "'", '"' ].includes(chars[i])) {
+            let q = chars[i++];
+            while (chars[i] !== q) {
+                if (chars[i] === '\\') value += chars[i++];
+                value += chars[i++];
             }
-            value = !q && (/[0-9]/.test(value[0]))
-                ? +value
-                : value;
-            if (edge) {
-                result[result.length - 1] += value;
-            } else {
-                result.push(value);
-            }
+            i++;
         } else {
-            result[result.length - 1] += chars[i];
-            i++;
+            value += chars[i++];
         }
-        continue;
     }
+    if (value.length) set(value);
     return result;
 };
-_.get = (o, p, d) => _.vpipe(p, _.keypath, _.partialRight(_.reduce, (a, k) => _.or(_.isObject(a) && a[k], _.nil), o)) || d;
+_.get = (o, p, d) => _.vpipe(p, _.keypath, _.partialRight(_.reduce, (a, k) => _.isObject(a) && a[k] || _.nil, o)) || d;
 _.has = (o, p) => _.vpipe(_.get(o, p), _.isNil, _.not);
 _.walk = (o, p, fn, mutate = false) => {
     const kp = _.keypath(p);
-    const result = mutate
-        ? o
-        : _.shallow(o);
+    const result = o == null
+        ? _.isNumber(kp[0])
+            ? []
+            : {}
+        : mutate
+            ? o
+            : _.shallow(o);
     let cursor = result;
     while (kp.length) {
         let current = kp.shift();
@@ -156,14 +133,14 @@ _.drop = (o, p) => _.walk(o, p, (cursor, k, next) => (_.isNil(next)
         ? cursor.splice(_.isNil(next), cursor.length)
         : (delete cursor[k])
     : cursor[k] = cursor[k]), true);
-_.assoc = (o, p, v) => _.walk(o, p, (cursor, k, next) => _.isNil(next)
-    ? cursor[k] = v
-    : cursor[k] = _.shallow(_.isNil(cursor[k]) && _.isNumber(next) ? [] : cursor[k]));
-_.dissoc = (o, p) => _.walk(o, p, (cursor, k, next) => _.isNil(next)
-    ? _.isArray(cursor)
-        ? cursor.splice(_.isNil(next), cursor.length)
-        : (delete cursor[k])
-    : cursor[k] = _.shallow(cursor[k]));
+_.assoc = (o, p, v) => _.walk(o, p, (c, k, n) => _.isNil(n)
+    ? c[k] = v
+    : c[k] = _.shallow(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]));
+_.dissoc = (o, p) => _.walk(o, p, (c, k, n) => _.isNil(n)
+    ? _.isArray(c)
+        ? c.splice(_.isNil(n), c.length)
+        : (delete c[k])
+    : c[k] = _.shallow(c[k]));
 _.assign = Object.assign;
 _.merge = (...args) => _.reduce(args, (a, arg) => {
         _.forEach(_.entries(arg), ([ k, v ]) => {
