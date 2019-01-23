@@ -21,13 +21,13 @@ const {
     drop,
     assoc,
     dissoc,
-    keypath,
+    castPath,
     fill,
     pop,
     push,
     reverse,
     shift,
-    sort, // TODO - note: make it do the right thing
+    sort,
     splice, // TODO
     unshift,
     concat, // TODO
@@ -42,12 +42,12 @@ const {
     find, // TODO
     findIndex, // TODO
     forEach, // TODO
-    keys, // TODO
+    keys,
     map, // TODO
     reduce, // TODO
     reduceRight, // TODO
     some, // TODO
-    values, // TODO
+    values,
     shallow, // TODO
     isEmpty, // TODO
     isEqiv,
@@ -226,21 +226,21 @@ describe('#isPlainObject', () => {
     });
 });
 
-describe('#keypath', () => {
+describe('#castPath', () => {
     it('returns array representing a keypath for a given keypath string', () => {
-        expect(keypath('foo.bar')).to.eql([ 'foo', 'bar' ]);
-        expect(keypath('foo["bar"]')).to.eql([ 'foo', 'bar' ]);
-        expect(keypath('foo["b\\"ar"]')).to.eql([ 'foo', 'b\\"ar' ]);
-        expect(keypath("foo['bar']")).to.eql([ 'foo', 'bar' ]);
-        expect(keypath("foo['bar'].baz")).to.eql([ 'foo', 'bar', 'baz' ]);
-        expect(keypath('foo[bar]')).to.eql([ 'foo', 'bar' ]);
-        expect(keypath('foo[0]')).to.eql([ 'foo', 0 ]);
-        expect(keypath('foo[0].bar')).to.eql([ 'foo', 0, 'bar' ]);
-        expect(keypath('foo[0].bar[\'baz\'].qux')).to.eql([ 'foo', 0, 'bar', 'baz', 'qux' ]);
-        expect(keypath('[0].bar[\'baz\'].qux')).to.eql([ 0, 'bar', 'baz', 'qux' ]);
-        expect(keypath('["foo"].bar[\'baz\'].qux')).to.eql([ 'foo', 'bar', 'baz', 'qux' ]);
-        expect(keypath(0)).to.eql([ 0 ]);
-        expect(keypath('foo')).to.eql([ 'foo' ]);
+        expect(castPath('foo.bar')).to.eql([ 'foo', 'bar' ]);
+        expect(castPath('foo["bar"]')).to.eql([ 'foo', 'bar' ]);
+        expect(castPath('foo["b\\"ar"]')).to.eql([ 'foo', 'b\\"ar' ]);
+        expect(castPath("foo['bar']")).to.eql([ 'foo', 'bar' ]);
+        expect(castPath("foo['bar'].baz")).to.eql([ 'foo', 'bar', 'baz' ]);
+        expect(castPath('foo[bar]')).to.eql([ 'foo', 'bar' ]);
+        expect(castPath('foo[0]')).to.eql([ 'foo', 0 ]);
+        expect(castPath('foo[0].bar')).to.eql([ 'foo', 0, 'bar' ]);
+        expect(castPath('foo[0].bar[\'baz\'].qux')).to.eql([ 'foo', 0, 'bar', 'baz', 'qux' ]);
+        expect(castPath('[0].bar[\'baz\'].qux')).to.eql([ 0, 'bar', 'baz', 'qux' ]);
+        expect(castPath('["foo"].bar[\'baz\'].qux')).to.eql([ 'foo', 'bar', 'baz', 'qux' ]);
+        expect(castPath(0)).to.eql([ 0 ]);
+        expect(castPath('foo')).to.eql([ 'foo' ]);
     });
 });
 
@@ -797,5 +797,41 @@ describe('#reverse', () => {
         expect(result).to.eql([ 3, 2, 1 ]);
         expect(arr).to.eql([ 1, 2, 3 ]);
         expect(arr).not.to.equal(result);
+    });
+});
+
+describe('#sort', () => {
+    it('returns a new array, sorted', () => {
+        let arr;
+        let result;
+        arr = [ 2, 1, 3 ];
+        result = sort(arr);
+        expect(result).to.eql([ 1, 2, 3 ]);
+        expect(arr).to.eql([ 2, 1, 3 ]);
+        expect(arr).not.to.equal(result);
+        arr = [ 12, 1, 3 ];
+        result = sort(arr);
+        expect(result).to.eql([ 1, 3, 12 ]);
+        expect(arr).to.eql([ 12, 1, 3 ]);
+        expect(arr).not.to.equal(result);
+        arr = [ 'b', 'a', 'c' ];
+        result = sort(arr);
+        expect(result).to.eql([ 'a', 'b', 'c' ]);
+        expect(arr).to.eql([ 'b', 'a', 'c' ]);
+        expect(arr).not.to.equal(result);
+    });
+});
+
+describe('#values', () => {
+    it('returns values of given object', () => {
+        expect(values({ foo: 'bar', bam: 'boom' })).to.eql([ 'bar', 'boom' ]);
+        expect(values([ 'foo', 'bar', 'bam', 'boom' ])).to.eql([ 'foo', 'bar', 'bam', 'boom' ]);
+    });
+});
+
+describe('#keys', () => {
+    it('returns keys of given object', () => {
+        expect(keys({ foo: 'bar', bam: 'boom' })).to.eql([ 'foo', 'bam' ]);
+        expect(keys([ 'foo', 'bar', 'bam', 'boom' ])).to.eql([ 0, 1, 2, 3 ]);
     });
 });

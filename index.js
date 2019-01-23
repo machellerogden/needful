@@ -4,7 +4,6 @@ const _ = exports;
     'push',
     'reverse',
     'unshift',
-    'sort',
     'splice'
 ].forEach((k, r) => _[k] = (v, ...args) => (r = [ ...(v || []) ], [][k].apply(r, args), r));
 [   'pop',
@@ -30,6 +29,7 @@ const _ = exports;
     'keys',
     'values'
 ].forEach(k => _[k] = (v) => Array.isArray(v) ? [ ...[][k].apply(v || []) ] : Object[k](v));
+_.sort = (v, fn) => [ ...(v || []) ].sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
 _.nil = void 0;
 _.not = v => !v;
 _.and = (...args) => _.reduce(args, (a, b) => _.falsy(a) ? a : b);
@@ -79,7 +79,7 @@ _.isEmpty = v => _.isArray(v) || _.isString(v)
     : _.isObject(v)
         ? !Object.keys(v).length
         : _.isNil(v);
-_.keypath = v => {
+_.castPath = v => {
     if (_.isArray(v)) return [ ...v ];
     const chars = ('' + v).split('');
     const result = [];
@@ -104,10 +104,10 @@ _.keypath = v => {
     if (value.length) set(value);
     return result;
 };
-_.get = (o, p, d) => _.pipe(_.keypath, _.partialRight(_.reduce, (a, k) => _.isObject(a) && a[k] || _.nil, o))(p) || d;
+_.get = (o, p, d) => _.pipe(_.castPath, _.partialRight(_.reduce, (a, k) => _.isObject(a) && a[k] || _.nil, o))(p) || d;
 _.has = (o, p) => _.pipe(_.isNil, _.not)(_.get(o, p));
-_.walk = (o, p, fn, mutate = false) => {
-    const kp = _.keypath(p);
+_.walkPath = (o, p, fn, mutate = false) => {
+    const kp = _.castPath(p);
     const result = o == null
         ? _.isNumber(kp[0])
             ? []
@@ -117,17 +117,17 @@ _.walk = (o, p, fn, mutate = false) => {
             : _.shallow(o);
     let cursor = result;
     while (kp.length) {
-        let current = kp.shift();
-        let next = kp[0];
-        fn(cursor, current, next);
-        if (next != null) cursor = cursor[current];
+        let c = kp.shift();
+        let n = kp[0];
+        fn(cursor, c, n);
+        if (n != null) cursor = cursor[c];
     }
     return result;
 };
-_.assoc = (o, p, v, m = false) => _.walk(o, p, (c, k, n) => (_.isNil(n)
+_.assoc = (o, p, v, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? c[k] = v
     : c[k] = _.shallow(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k])), m);
-_.dissoc = (o, p, m = false) => _.walk(o, p, (c, k, n) => (_.isNil(n)
+_.dissoc = (o, p, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? _.isArray(c)
         ? c.splice(_.isNil(n), c.length)
         : (delete c[k])
