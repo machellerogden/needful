@@ -9,6 +9,7 @@ const {
     complement,
     falsy,
     truthy,
+    bang,
     partial,
     partialRight,
     pipe,
@@ -28,13 +29,13 @@ const {
     reverse,
     shift,
     sort,
-    splice, // TODO
+    splice,
     unshift,
-    concat, // TODO
-    includes, // TODO
-    indexOf, // TODO
+    concat,
+    includes,
+    indexOf,
     join, // TODO
-    lastIndexOf, // TODO
+    lastIndexOf,
     slice, // TODO
     entries, // TODO
     every, // TODO
@@ -48,7 +49,6 @@ const {
     reduceRight, // TODO
     some, // TODO
     values,
-    shallow, // TODO
     isEmpty, // TODO
     isEqiv,
     isEqual,
@@ -833,5 +833,90 @@ describe('#keys', () => {
     it('returns keys of given object', () => {
         expect(keys({ foo: 'bar', bam: 'boom' })).to.eql([ 'foo', 'bam' ]);
         expect(keys([ 'foo', 'bar', 'bam', 'boom' ])).to.eql([ 0, 1, 2, 3 ]);
+    });
+});
+
+describe('#splice', () => {
+    it('returns new array with given items spliced in', () => {
+        let arr = [ 'foo', 'bar', 'qux' ];
+        let result = splice(arr, 2, 0, 'bam', 'boom');
+        expect(result).to.eql([ 'foo', 'bar', 'bam', 'boom', 'qux' ]);
+        expect(arr).to.eql([ 'foo', 'bar', 'qux' ]);
+        expect(arr).not.to.equal(result);
+        let sub = { foo: 'bar' };
+        arr = [ sub, 'foo', 'bar', 'qux' ];
+        result = splice(arr, 3, 0, 'bam', 'boom');
+        expect(result).to.eql([ sub, 'foo', 'bar', 'bam', 'boom', 'qux' ]);
+        expect(arr).to.eql([ sub, 'foo', 'bar', 'qux' ]);
+        expect(arr).not.to.equal(result);
+        expect(sub).not.to.equal(result[0]);
+    });
+});
+
+describe('#concat', () => {
+    it('returns new array that is a concatenation of all given arrays', () => {
+        let a = [ 'foo', 'bar' ];
+        let b = [ 'qux', 'xyzzy' ];
+        let c = [ { foo: 'bar' } ];
+        let result = concat(a, b, c);
+        expect(result).to.eql([ 'foo', 'bar', 'qux', 'xyzzy', { foo: 'bar' } ]);
+        expect(a).to.eql([ 'foo', 'bar' ]);
+        expect(b).to.eql([ 'qux', 'xyzzy' ]);
+        expect(c).to.eql([ { foo: 'bar' } ]);
+        expect(c[0]).not.to.equal(result[result.length - 1]);
+    });
+});
+
+describe('#includes', () => {
+    it('returns boolean indicating if a given array contains a given value', () => {
+        let arr = [ 'foo', 'bar' ];
+        let result = includes(arr, 'foo');
+        expect(result).to.eql(true);
+        arr = [ 'foo', 'bar' ];
+        result = includes(arr, 'qux');
+        expect(result).to.eql(false);
+        let obj = {
+            an: 'object'
+        };
+        arr = [ 'foo', obj, 'bar' ];
+        result = includes(arr, obj);
+        expect(result).to.eql(true);
+    });
+});
+
+describe('#indexOf', () => {
+    it('returns index of a given value in a given array', () => {
+        let arr = [ 'foo', 'bar' ];
+        let result = indexOf(arr, 'foo');
+        expect(result).to.eql(0);
+        arr = [ 'foo', 'bar' ];
+        result = indexOf(arr, 'bar');
+        expect(result).to.eql(1);
+        arr = [ 'foo', 'bar' ];
+        result = indexOf(arr, 'qux');
+        expect(result).to.eql(-1);
+        let obj = {
+            an: 'object'
+        };
+        arr = [ 'foo', obj, 'bar' ];
+        result = indexOf(arr, obj);
+        expect(result).to.eql(1);
+    });
+});
+
+describe('#lastIndexOf', () => {
+    it('returns the last index of a given value in a given array', () => {
+        let arr = [ 'foo', 'bar', 'foo' ];
+        let result = lastIndexOf(arr, 'foo');
+        expect(result).to.eql(2);
+        arr = [ 'foo', 'bar' ];
+        result = lastIndexOf(arr, 'qux');
+        expect(result).to.eql(-1);
+        let obj = {
+            an: 'object'
+        };
+        arr = [ 'foo', obj, 'bar', obj ];
+        result = lastIndexOf(arr, obj);
+        expect(result).to.eql(3);
     });
 });

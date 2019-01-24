@@ -1,19 +1,40 @@
 'use strict';
 const _ = exports;
+_.nil = void 0;
+_.isArray = Array.isArray;
+_.is = (v, t) => typeof v === t;
+_.isNil = v => v == _.nil;
+_.complement = fn => (...args) => !fn(...args);
+_.notNil = _.complement(_.isNil);
+_.isObject = v => _.notNil(v) && _.is(v, 'object');
+_.isEqual = (a, b) => [ a, b ].every(_.isObject)
+    ? Object.is(a, b)
+    : a === b;
+_.isFalse = v => _.isEqual(v, false);
+_.falsy = v => _.isNil(v) || _.isFalse(v);
+_.truthy = _.complement(_.falsy);
+_.isString = v => _.is(v, 'string');
+_.isNumber = v => _.is(v, 'number');
+_.isBoolean = v => _.is(v, 'boolean');
+_.isUndefined = v => _.is(v, 'undefined');
+_.isNull = v => v === null;
+_.isPlainObject = v => _.isEqual(Object.prototype.toString.call(v), '[object Object]');
+_.bang = v => !v;
+_.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
+_.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
+_.clone = x => _.isArray(x)
+    ? [ ...x ].map(_.clone)
+    : _.isObject(x)
+        ? Object.entries({ ...x }).reduce((a, [k, v]) => (a[k] = _.clone(v), a), {})
+        : x;
 [   'fill',
     'push',
     'reverse',
     'unshift',
     'splice'
-].forEach((k, r) => _[k] = (v, ...args) => (r = [ ...(v || []) ], [][k].apply(r, args), r));
-[   'pop',
-    'shift'
-].forEach(k => _[k] = v => [ ...v ][k]());
+].forEach((k, r) => _[k] = (v, ...args) => (r = _.clone(v) || [], [][k].apply(r, args), r));
 [   'concat',
-    'includes',
-    'indexOf',
     'join',
-    'lastIndexOf',
     'slice',
     'every',
     'filter',
@@ -24,21 +45,15 @@ const _ = exports;
     'reduce',
     'reduceRight',
     'some'
-].forEach(k => _[k] = (v, ...args) => [][k].apply(v || [], args));
-[   'entries',
-    'keys',
-    'values'
-].forEach(k => _[k] = (v) => Array.isArray(v) ? [ ...[][k].apply(v || []) ] : Object[k](v));
-_.sort = (v, fn) => [ ...(v || []) ].sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
-_.nil = void 0;
-_.not = v => !v;
+].forEach(k => _[k] = (v, ...args) => [][k].apply(_.clone(v) || [], args.map(_.clone)));
+[ 'entries', 'keys', 'values' ].forEach(k => _[k] = (v) => _.isArray(v) ? [ ...[][k].apply(v || []) ] : Object[k](v));
+[ 'pop', 'shift' ].forEach(k => _[k] = v => _.clone(v)[k]());
+[ 'includes', 'indexOf', 'lastIndexOf' ].forEach(k => _[k] = (v, x) => v[k](x));
+_.sort = (v, fn) => _.clone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
 _.and = (...args) => _.reduce(args, (a, b) => _.falsy(a) ? a : b);
 _.or = (...args) => _.reduce(args, (a, b) => _.falsy(a) ? b : a);
-_.complement = fn => (...args) => !fn(...args);
-_.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
-_.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
 _.isEqiv = (a, b) => {
-    if (_.every([typeof a, typeof b ], v => v === 'object')) {
+    if ([ a, b ].every(_.isObject)) {
         const ks = _.keys(a);
         if (ks.length != _.keys(b).length) return false;
         while (ks.length) {
@@ -50,30 +65,8 @@ _.isEqiv = (a, b) => {
         return a == b;
     }
 };
-_.isEqual = (a, b) => _.every([typeof a, typeof b ], v => v === 'object')
-    ? Object.is(a, b)
-    : a === b;
-_.isNil = v => _.isEqiv(v, _.nil);
-_.notNil = _.complement(_.isNil);
-_.isFalse = v => _.isEqual(v, false);
-_.falsy = v => _.isNil(v) || _.isFalse(v);
-_.truthy = _.complement(_.falsy);
-_.is = (v, t) => _.isEqual(typeof v, t);
-_.isString = v => _.is(v, 'string');
-_.isNumber = v => _.is(v, 'number');
-_.isBoolean = v => _.is(v, 'boolean');
-_.isUndefined = v => _.is(v, 'undefined');
-_.isNull = v => _.isEqual(v, null);
-_.isArray = Array.isArray;
-_.isObject = v => !_.isNil(v) && _.is(v, 'object');
-_.isPlainObject = v => _.isEqual(Object.prototype.toString.call(v), '[object Object]');
 _.pipe = (first, ...rest) => (...args) => _.reduce(rest, (acc, fn) => fn(acc), first(...args));
 _.compose = (...fns) => ((f) => (...args) => _.pipe(...f)(...args))(_.reverse([ ...fns ]));
-_.shallow = (v = {}) => _.isArray(v)
-    ? [ ...v ]
-    : _.isObject(v)
-        ? { ...v }
-        : v;
 _.isEmpty = v => _.isArray(v) || _.isString(v)
     ? !v.length
     : _.isObject(v)
@@ -105,7 +98,7 @@ _.castPath = v => {
     return result;
 };
 _.get = (o, p, d) => _.pipe(_.castPath, _.partialRight(_.reduce, (a, k) => _.isObject(a) && a[k] || _.nil, o))(p) || d;
-_.has = (o, p) => _.pipe(_.isNil, _.not)(_.get(o, p));
+_.has = (o, p) => _.pipe(_.isNil, _.bang)(_.get(o, p));
 _.walkPath = (o, p, fn, mutate = false) => {
     const kp = _.castPath(p);
     const result = o == null
@@ -114,7 +107,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
             : {}
         : mutate
             ? o
-            : _.shallow(o);
+            : _.clone(o) || {};
     let cursor = result;
     while (kp.length) {
         let c = kp.shift();
@@ -126,12 +119,12 @@ _.walkPath = (o, p, fn, mutate = false) => {
 };
 _.assoc = (o, p, v, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? c[k] = v
-    : c[k] = _.shallow(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k])), m);
+    : c[k] = _.clone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
 _.dissoc = (o, p, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? _.isArray(c)
         ? c.splice(_.isNil(n), c.length)
         : (delete c[k])
-    : c[k] = _.shallow(c[k])), m);
+    : c[k] = _.clone(c[k]) || {}), m);
 _.set = _.partialRight(_.assoc, true);
 _.drop = _.partialRight(_.dissoc, true);
 _.assign = Object.assign;
@@ -145,3 +138,35 @@ _.merge = (...args) => _.reduce(args, (a, arg) => {
         });
         return a;
     });
+function* lazyMap(it, fn) {
+    while (true) {
+        let n = it.next();
+        if (n.done) break;
+        yield fn(n.value);
+    }
+}
+function* lazyFilter(it, fn) {
+    while (true) {
+        let n = it.next();
+        if (n.done) break;
+        if (fn(n.value)) yield n.value;
+    }
+}
+function* lazyReduce(it, fn, acc) {
+    let n = it.next();
+    acc = _.isNil(acc)
+        ? n.value
+        : acc;
+    if (n.done) return;
+    while (true) {
+        n = it.next();
+        if (n.done) break;
+        acc = fn(acc, n.value);
+        yield acc;
+    }
+}
+_.lazy = {
+    map: lazyMap,
+    filter: lazyFilter,
+    reduce: lazyReduce
+};
