@@ -2,6 +2,10 @@
   "name": "needful",
   "version": "1.5.0",
   "description": "a few tiny functions to help you do the needful",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/machellerogden/needful.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha \"test/**/*.spec.js\""
