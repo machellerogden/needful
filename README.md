@@ -17,19 +17,21 @@ If you're working in Node (> LTS) then chances are that the above libraries all 
 
 # Reference
 
+### nil
+
+`nil` is a variable is provided as a safe way to reference `undefined`. Since `undefined` can actually be redefined, it is technical not safe to reference directly.
+
+## Functions
+
 Unless otherwise noted, every function provided by this library can be expected to return a new deeply cloned value.
 
-## nil
-
-`nil` is a variable is provided as a safe way to reference `undefined`. Since `undefined` can actually be redefined, it is never safe to reference directly.
-
-## isArray
+### isArray
 
 `isArray` is a convenience reference to `Array.isArray`.
 
-## is
+### is
 
-`is` is functional wrapper around the `typeof` keyword. It takes a value and a string representation of a given JavaScript type and returns a boolean if the given value is of that type.
+`is` wraps the `typeof` keyword. It takes a value and a string representation of a given JavaScript type and returns a boolean if the given value is of that type.
 
 ```js
 is({}, 'object'); // true
@@ -39,243 +41,243 @@ is('foo', 'string'); // true
 is(123, 'number'); // true
 ```
 
-## isNil
+### isNil
+
+`isNil` returns true for `null` or `undefined'.
+
+### complement
 
 _TODO_
 
-## complement
+### notNil
 
 _TODO_
 
-## notNil
+### isObject
 
 _TODO_
 
-## isObject
+### isEqual
 
 _TODO_
 
-## isEqual
+### isFalse
 
 _TODO_
 
-## isFalse
+### falsy
 
 _TODO_
 
-## falsy
+### truthy
 
 _TODO_
 
-## truthy
+### isString
 
 _TODO_
 
-## isString
+### isNumber
 
 _TODO_
 
-## isNumber
+### isBoolean
 
 _TODO_
 
-## isBoolean
+### isUndefined
 
 _TODO_
 
-## isUndefined
+### isNull
 
 _TODO_
 
-## isNull
+### isPlainObject
 
 _TODO_
 
-## isPlainObject
+### bang
 
 _TODO_
 
-## bang
+### partial
 
 _TODO_
 
-## partial
+### partialRight
 
 _TODO_
 
-## partialRight
+### clone
 
 _TODO_
 
-## clone
+### fill
 
 _TODO_
 
-## fill
+### push
 
 _TODO_
 
-## push
+### reverse
 
 _TODO_
 
-## reverse
+### unshift
 
 _TODO_
 
-## unshift
+### splice
 
 _TODO_
 
-## splice
+### concat
 
 _TODO_
 
-## concat
+### join
 
 _TODO_
 
-## join
+### slice
 
 _TODO_
 
-## slice
+### every
 
 _TODO_
 
-## every
+### filter
 
 _TODO_
 
-## filter
+### find
 
 _TODO_
 
-## find
+### findIndex
 
 _TODO_
 
-## findIndex
+### forEach
 
 _TODO_
 
-## forEach
+### map
 
 _TODO_
 
-## map
+### reduce
 
 _TODO_
 
-## reduce
+### reduceRight
 
 _TODO_
 
-## reduceRight
+### some
 
 _TODO_
 
-## some
+### entries
 
 _TODO_
 
-## entries
+### keys
 
 _TODO_
 
-## keys
+### values
 
 _TODO_
 
-## values
+### pop
 
 _TODO_
 
-## pop
+### shift
 
 _TODO_
 
-## shift
+### includes
 
 _TODO_
 
-## includes
+### indexOf
 
 _TODO_
 
-## indexOf
+### lastIndexOf
 
 _TODO_
 
-## lastIndexOf
+### sort
 
 _TODO_
 
-## sort
+### and
 
 _TODO_
 
-## and
+### or
 
 _TODO_
 
-## or
+### isEqiv
 
 _TODO_
 
-## isEqiv
+### pipe
 
 _TODO_
 
-## pipe
+### compose
 
 _TODO_
 
-## compose
+### isEmpty
 
 _TODO_
 
-## isEmpty
+### castPath
 
 _TODO_
 
-## castPath
+### get
 
 _TODO_
 
-## get
+### has
 
 _TODO_
 
-## has
+### walkPath
 
 _TODO_
 
-## walkPath
+### assoc
 
 _TODO_
 
-## assoc
+### dissoc
 
 _TODO_
 
-## dissoc
+### set
 
 _TODO_
 
-## set
+### drop
 
 _TODO_
 
-## drop
+### assign
 
 _TODO_
 
-## assign
-
-_TODO_
-
-## merge
+### merge
 
 _TODO_
 
