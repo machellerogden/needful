@@ -4,6 +4,7 @@ const chai = require('chai');
 const { expect } = chai;
 
 const {
+    nil,
     and,
     or,
     complement,
@@ -54,6 +55,12 @@ const {
     isEqual,
     merge
 } = require('.');
+
+describe('#nil', () => {
+    it('nil is a safe reference to undefined', () => {
+        expect(nil).to.be.undefined;
+    });
+});
 
 describe('#or', () => {
     it('takes n arguments and returns the first one which is not null/false, or if both are null/false returns the last value', () => {
