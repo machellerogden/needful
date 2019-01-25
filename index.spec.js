@@ -38,16 +38,16 @@ const {
     lastIndexOf,
     slice,
     entries,
-    every, // TODO
-    filter, // TODO
-    find, // TODO
-    findIndex, // TODO
-    forEach, // TODO
+    every,
+    filter,
+    find,
+    findIndex,
+    forEach,
     keys,
-    map, // TODO
-    reduce, // TODO
-    reduceRight, // TODO
-    some, // TODO
+    map,
+    reduce,
+    reduceRight,
+    some,
     values,
     isEmpty,
     isEqiv,
@@ -931,6 +931,7 @@ describe('#slice', () => {
     it('returns a new array from given start index up until given end index', () => {
         expect(slice([ 1, 2, 3, 4 ], 1, 3)).to.eql([ 2, 3 ]);
         expect(slice([ 1, 2, 3, 4 ], 1)).to.eql([ 2, 3, 4 ]);
+        // TODO: test immutability
     });
 });
 
@@ -941,10 +942,68 @@ describe('#entries', () => {
     });
 });
 
-describe('#entries', () => {
-    it('returns a new array containing key value pairs of given object or array', () => {
-        expect(entries([ 1, 2, 3 ])).to.eql([ [ 0, 1], [ 1, 2 ], [ 2, 3] ]);
-        expect(entries({ foo: 'bar', baz: 'qux', bam: 'boom' })).to.eql([ [ 'foo', 'bar' ], [ 'baz', 'qux' ], [ 'bam', 'boom' ] ]);
+describe('#every', () => {
+    it('returns boolean indicating if given predicate returns true for each element in a given array', () => {
+        expect(every([ 1, 2, 3 ], v => typeof v === 'number')).to.be.true;
+        expect(every([ 1, 'foo', 3 ], v => typeof v === 'number')).to.be.false;
+    });
+});
+
+describe('#filter', () => {
+    it('returns new array containing only elements of given array which pass given predicate', () => {
+        expect(filter([ 1, 2, 3 ], v => v % 2)).to.eql([ 1, 3]);
+        // TODO: test immutability
+    });
+});
+
+describe('#find', () => {
+    it('returns first element from given array which matches predicate', () => {
+        expect(find([ 1, 2, 3 ], v => v === 2)).to.eql(2);
+        // TODO: test immutability
+    });
+});
+
+describe('#findIndex', () => {
+    it('returns index of first element from given array which matches predicate', () => {
+        expect(findIndex([ 1, 2, 3 ], v => v === 2)).to.eql(1);
+        // TODO: test immutability
+    });
+});
+
+describe('#forEach', () => {
+    it('iterates over each element in a given array', () => {
+        const result = [];
+        forEach([ 'foo', 'bar' ], (v, i) => result.push([ i, v ]));
+        expect(result).to.eql([ [ 0, 'foo' ], [ 1, 'bar' ] ]);
+        // TODO - more tests
+    });
+});
+
+describe('#map', () => {
+    it('returns a new array with values of given array mapped to given function', () => {
+        expect(map([ 'foo', 'bar' ], v => v + 'boom')).to.eql([ 'fooboom', 'barboom' ]);
+        // TODO - more tests
+    });
+});
+
+describe('#reduce', () => {
+    it('returns a new accumulated value based on given array and a reducing function', () => {
+        //expect(reduce([ 'foo', 'bar', 'baz' ], (a = '', v) => (a + v, a))).to.eql('foobarbaz');
+        // TODO - more tests
+    });
+});
+
+describe('#reduceRight', () => {
+    it('same as reduce but works right to left', () => {
+        //expect(reduceRight([ 'foo', 'bar', 'baz' ], (a = '', v) => (a + v, a))).to.eql('bazbarfoo');
+        // TODO
+    });
+});
+
+describe('#some', () => {
+    it('returns boolean indicating if given predicate returns true for each element in a given array', () => {
+        expect(some([ 'foo', 'bar', 3 ], v => typeof v === 'number')).to.be.true;
+        expect(some([ 'foo', 'bar', 'baz' ], v => typeof v === 'number')).to.be.false;
     });
 });
 
