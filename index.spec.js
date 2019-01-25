@@ -8,8 +8,8 @@ const {
     and,
     or,
     complement,
-    falsy,
-    truthy,
+    isFalsy,
+    isTruthy,
     bang,
     partial,
     partialRight,
@@ -122,38 +122,40 @@ describe('#isEqual', () => {
 
 describe('#complement', () => {
     it('takes a given function and returns a new function which will return the opposite truth value', () => {
-        const isTrue = () => true;
-        expect(complement(isTrue)()).to.equal(false);
+        expect(complement(() => true)()).to.equal(false);
+        expect(complement(() => false)()).to.equal(true);
+        expect(complement(() => nil)()).to.equal(true);
+        expect(complement(() => 0)()).to.equal(false);
     });
 });
 
-describe('#falsy', () => {
+describe('#isFalsy', () => {
     it('returns true if null or false', () => {
-        expect(falsy(true)).to.be.false;
-        expect(falsy(null)).to.be.true;
-        expect(falsy(false)).to.be.true;
-        expect(falsy(0)).to.be.false;
-        expect(falsy('')).to.be.false;
-        expect(falsy('foo')).to.be.false;
-        expect(falsy([])).to.be.false;
-        expect(falsy([ 1, 2, 3 ])).to.be.false;
-        expect(falsy({})).to.be.false;
-        expect(falsy({ foo: 'bar' })).to.be.false;
+        expect(isFalsy(true)).to.be.false;
+        expect(isFalsy(null)).to.be.true;
+        expect(isFalsy(false)).to.be.true;
+        expect(isFalsy(0)).to.be.false;
+        expect(isFalsy('')).to.be.false;
+        expect(isFalsy('foo')).to.be.false;
+        expect(isFalsy([])).to.be.false;
+        expect(isFalsy([ 1, 2, 3 ])).to.be.false;
+        expect(isFalsy({})).to.be.false;
+        expect(isFalsy({ foo: 'bar' })).to.be.false;
     });
 });
 
-describe('#truthy', () => {
+describe('#isTruthy', () => {
     it('returns true if not null and not false', () => {
-        expect(truthy(true)).to.be.true;
-        expect(truthy(null)).to.be.false;
-        expect(truthy(false)).to.be.false;
-        expect(truthy(0)).to.be.true;
-        expect(truthy('')).to.be.true;
-        expect(truthy('foo')).to.be.true;
-        expect(truthy([])).to.be.true;
-        expect(truthy([ 1, 2, 3 ])).to.be.true;
-        expect(truthy({})).to.be.true;
-        expect(truthy({ foo: 'bar' })).to.be.true;
+        expect(isTruthy(true)).to.be.true;
+        expect(isTruthy(null)).to.be.false;
+        expect(isTruthy(false)).to.be.false;
+        expect(isTruthy(0)).to.be.true;
+        expect(isTruthy('')).to.be.true;
+        expect(isTruthy('foo')).to.be.true;
+        expect(isTruthy([])).to.be.true;
+        expect(isTruthy([ 1, 2, 3 ])).to.be.true;
+        expect(isTruthy({})).to.be.true;
+        expect(isTruthy({ foo: 'bar' })).to.be.true;
     });
 });
 

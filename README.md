@@ -25,6 +25,37 @@ If you're working in Node (> LTS) then chances are that the above libraries all 
 
 Unless otherwise noted, every function provided by this library can be expected to return a new deeply cloned value.
 
+### isFalsy
+
+`isFalsy` returns true for `false`, `null` and `undefined` values.
+
+Note: `0` is considered to be truthy.
+
+### isTruthy
+
+`isTruthy` complements `isFalsy`.
+
+### complement
+
+`complement` given a function will return a function which when invoked will return the logically opposite value.
+
+```js
+complement(() => true)(); // false
+complement(() => false)(); // true
+complement(() => nil)(); // true
+complement(() => 0)(); // false
+```
+
+Note: `0` is considered to be truthy.
+
+### isNil
+
+`isNil` given a value returns true when that value is `null` or `undefined', and otherwise returns false.
+
+### notNil
+
+`notNil` is the complement of `isNil`.
+
 ### isArray
 
 `isArray` is a convenience reference to `Array.isArray`.
@@ -41,18 +72,6 @@ is('foo', 'string'); // true
 is(123, 'number'); // true
 ```
 
-### isNil
-
-`isNil` returns true for `null` or `undefined'.
-
-### complement
-
-_TODO_
-
-### notNil
-
-_TODO_
-
 ### isObject
 
 _TODO_
@@ -62,14 +81,6 @@ _TODO_
 _TODO_
 
 ### isFalse
-
-_TODO_
-
-### falsy
-
-_TODO_
-
-### truthy
 
 _TODO_
 

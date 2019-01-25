@@ -4,15 +4,15 @@ _.nil = void 0;
 _.isArray = Array.isArray;
 _.is = (v, t) => typeof v === t;
 _.isNil = v => v == _.nil;
-_.complement = fn => (...args) => !fn(...args);
-_.notNil = _.complement(_.isNil);
+_.notNil = v => v != _.nil;
 _.isObject = v => _.notNil(v) && _.is(v, 'object');
 _.isEqual = (a, b) => [ a, b ].every(_.isObject)
     ? Object.is(a, b)
     : a === b;
 _.isFalse = v => _.isEqual(v, false);
-_.falsy = v => _.isNil(v) || _.isFalse(v);
-_.truthy = _.complement(_.falsy);
+_.isFalsy = v => _.isNil(v) || _.isFalse(v);
+_.complement = fn => (...args) => _.isFalsy(fn(...args));
+_.isTruthy = _.complement(_.isFalsy);
 _.isString = v => _.is(v, 'string');
 _.isNumber = v => _.is(v, 'number');
 _.isBoolean = v => _.is(v, 'boolean');
@@ -50,8 +50,8 @@ _.clone = x => _.isArray(x)
 [ 'pop', 'shift' ].forEach(k => _[k] = v => _.clone(v)[k]());
 [ 'includes', 'indexOf', 'lastIndexOf' ].forEach(k => _[k] = (v, x) => v[k](x));
 _.sort = (v, fn) => _.clone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
-_.and = (...args) => _.reduce(args, (a, b) => _.falsy(a) ? a : b);
-_.or = (...args) => _.reduce(args, (a, b) => _.falsy(a) ? b : a);
+_.and = (...args) => _.reduce(args, (a, b) => _.isFalsy(a) ? a : b);
+_.or = (...args) => _.reduce(args, (a, b) => _.isFalsy(a) ? b : a);
 _.isEqiv = (a, b) => {
     if ([ a, b ].every(_.isObject)) {
         const ks = _.keys(a);
