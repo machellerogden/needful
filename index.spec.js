@@ -988,15 +988,15 @@ describe('#map', () => {
 
 describe('#reduce', () => {
     it('returns a new accumulated value based on given array and a reducing function', () => {
-        //expect(reduce([ 'foo', 'bar', 'baz' ], (a = '', v) => (a + v, a))).to.eql('foobarbaz');
+        expect(reduce([ 'foo', 'bar', 'baz' ], (a = '', v) => (a += v, a))).to.eql('foobarbaz');
         // TODO - more tests
     });
 });
 
 describe('#reduceRight', () => {
     it('same as reduce but works right to left', () => {
-        //expect(reduceRight([ 'foo', 'bar', 'baz' ], (a = '', v) => (a + v, a))).to.eql('bazbarfoo');
-        // TODO
+        expect(reduceRight([ 'foo', 'bar', 'baz' ], (a = '', v) => (a += v, a))).to.eql('bazbarfoo');
+        // TODO - more tests
     });
 });
 
