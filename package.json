@@ -1,6 +1,6 @@
 {
   "name": "needful",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "micro library for functional-style javascript programming",
   "repository": {
     "type": "git",
