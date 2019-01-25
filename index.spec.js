@@ -58,7 +58,13 @@ const {
 
 describe('#nil', () => {
     it('nil is a safe reference to undefined', () => {
-        expect(nil).to.be.undefined;
+        ((undefined) => {
+            expect(nil).to.be.undefined;
+            undefined = 'something';
+            expect(undefined).not.to.be.undefined;
+            expect(undefined).to.equal('something');
+            expect(nil).to.be.undefined;
+        })();
     });
 });
 
