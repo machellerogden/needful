@@ -34,10 +34,10 @@ const {
     concat,
     includes,
     indexOf,
-    join, // TODO
+    join,
     lastIndexOf,
-    slice, // TODO
-    entries, // TODO
+    slice,
+    entries,
     every, // TODO
     filter, // TODO
     find, // TODO
@@ -49,11 +49,11 @@ const {
     reduceRight, // TODO
     some, // TODO
     values,
-    isEmpty, // TODO
+    isEmpty,
     isEqiv,
     isEqual,
     merge
-} = require('..');
+} = require('.');
 
 describe('#or', () => {
     it('takes n arguments and returns the first one which is not null/false, or if both are null/false returns the last value', () => {
@@ -920,3 +920,46 @@ describe('#lastIndexOf', () => {
         expect(result).to.eql(3);
     });
 });
+
+describe('#join', () => {
+    it('returns a string containing elements of given array joined by a given delimiter', () => {
+        expect(join([ 'foo', 'bar', 'baz' ], '-')).to.eql('foo-bar-baz');
+    });
+});
+
+describe('#slice', () => {
+    it('returns a new array from given start index up until given end index', () => {
+        expect(slice([ 1, 2, 3, 4 ], 1, 3)).to.eql([ 2, 3 ]);
+        expect(slice([ 1, 2, 3, 4 ], 1)).to.eql([ 2, 3, 4 ]);
+    });
+});
+
+describe('#entries', () => {
+    it('returns a new array containing key value pairs of given object or array', () => {
+        expect(entries([ 1, 2, 3 ])).to.eql([ [ 0, 1], [ 1, 2 ], [ 2, 3] ]);
+        expect(entries({ foo: 'bar', baz: 'qux', bam: 'boom' })).to.eql([ [ 'foo', 'bar' ], [ 'baz', 'qux' ], [ 'bam', 'boom' ] ]);
+    });
+});
+
+describe('#entries', () => {
+    it('returns a new array containing key value pairs of given object or array', () => {
+        expect(entries([ 1, 2, 3 ])).to.eql([ [ 0, 1], [ 1, 2 ], [ 2, 3] ]);
+        expect(entries({ foo: 'bar', baz: 'qux', bam: 'boom' })).to.eql([ [ 'foo', 'bar' ], [ 'baz', 'qux' ], [ 'bam', 'boom' ] ]);
+    });
+});
+
+describe('#isEmpty', () => {
+    it('returns boolean indicating whether a given value is empty', () => {
+        expect(isEmpty('foo')).to.be.false;
+        expect(isEmpty('')).to.be.true;
+        expect(isEmpty([ 'foo' ])).to.be.false;
+        expect(isEmpty([])).to.be.true;
+        expect(isEmpty({ foo: 'bar' })).to.be.false;
+        expect(isEmpty({})).to.be.true;
+        expect(isEmpty(void 0)).to.be.true;
+        expect(isEmpty(null)).to.be.true;
+        expect(isEmpty(false)).to.be.false;
+        expect(isEmpty(0)).to.be.false;
+    });
+});
+

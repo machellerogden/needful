@@ -1,14 +1,14 @@
 {
   "name": "needful",
   "version": "1.5.1",
-  "description": "a few tiny functions to help you do the needful",
+  "description": "micro library for functional-style javascript programming",
   "repository": {
     "type": "git",
     "url": "https://github.com/machellerogden/needful.git"
   },
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha \"test/**/*.spec.js\""
+    "test": "./node_modules/.bin/mocha \"index.spec.js\""
   },
   "keywords": [
     "functional",
@@ -26,8 +26,8 @@
     "pre-commit": "^1.2.2"
   },
   "engines": {
-    "node": ">=8.9.0",
-    "npm": ">=5.0.0"
+    "node": ">=10.15.0",
+    "npm": ">=6.0.0"
   },
   "precommit": [
     "test"

@@ -138,35 +138,3 @@ _.merge = (...args) => _.reduce(args, (a, arg) => {
         });
         return a;
     });
-function* lazyMap(it, fn) {
-    while (true) {
-        let n = it.next();
-        if (n.done) break;
-        yield fn(n.value);
-    }
-}
-function* lazyFilter(it, fn) {
-    while (true) {
-        let n = it.next();
-        if (n.done) break;
-        if (fn(n.value)) yield n.value;
-    }
-}
-function* lazyReduce(it, fn, acc) {
-    let n = it.next();
-    acc = _.isNil(acc)
-        ? n.value
-        : acc;
-    if (n.done) return;
-    while (true) {
-        n = it.next();
-        if (n.done) break;
-        acc = fn(acc, n.value);
-        yield acc;
-    }
-}
-_.lazy = {
-    map: lazyMap,
-    filter: lazyFilter,
-    reduce: lazyReduce
-};
