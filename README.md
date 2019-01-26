@@ -1,301 +1,620 @@
 # Needful
 
-> do the needful
+Needful is a functionally-flavored micro library written in ECMAScript 2018.
 
-Needful is a micro library for functional-style programming in Node v10+.
+# A few reasons to use Needful:
+* single 3kb export covering the 80% use case
+* immutability by default
+* `0` == `true`
 
-## Why not use ramda / lodash / underscore?
+# Why not use lodash / ramda / underscore?
 
-[Ramda](https://ramdajs.com/) is amazing. [Lodash](http://lodash.com) is insanely useful. [Underscore](https://underscorejs.org/) started a movement.
+> You can't always get what you want
+> But if you try sometimes you just might find
+> You get what you need
 
-If you want to take a functional-style approach on the front-end, use one of
-the above.
+Want a feature that Needful is missing? Use [Lodash](https://lodash.com/). It's got you covered.
 
-If you're working in Node (> LTS) then chances are that the above libraries all have more than you need. It's true you can pull together just the pieces you want but at some point, it's easier to just to require one tiny dependency that covers the 80% use case. Needful doesn't have everything you'll want, but has what you'll need for basic functional-style programming.
+Want automatic currying? Use [Ramda](https://ramdajs.com/). It's got your back.
 
-**Warning:** Node 10+ only.
+Want something time-tested and battle-hardened? Use [Underscore](https://underscorejs.org/). It's been around forever—and it works.
 
-# Reference
+Needful is smaller (3kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
 
-### nil
+Needful does the needful, and no more.
 
-`nil` is a variable is provided as a safe way to reference `undefined`. Since `undefined` can actually be redefined, it is technical not safe to reference directly.
+# API
 
-## Functions
+<a name="nil"></a>
 
-Unless otherwise noted, every function provided by this library can be expected to return a new deeply cloned value.
+## nil : <code>undefined</code>
+A safe reference to `undefined`.
 
-### isFalsy
+While it rarely happens in practice, `undefined` is not a keyword and it
+possible for it to be shadowed.
 
-`isFalsy` returns true for `false`, `null` and `undefined` values.
+**Kind**: global variable  
+**See**: isNil, notNil  
+**Since**: 1.2.0  
+<a name="isArray"></a>
+
+## isArray(value) ⇒ <code>boolean</code>
+A convenient reference to `Array.isArray`.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns `true` if `value` is an object, else `false`.  
+**Since**: 1.2.1  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
+<a name="is"></a>
+
+## is(value, type) ⇒ <code>boolean</code>
+Checks if `value` is of `type`.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns `true` if `value` is of given `type`, else `false`.  
+**Since**: 1.0.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+| type | <code>&#x27;undefined&#x27;</code> \| <code>&#x27;boolean&#x27;</code> \| <code>&#x27;string&#x27;</code> \| <code>&#x27;number&#x27;</code> \| <code>&#x27;object&#x27;</code> \| <code>&#x27;function&#x27;</code> \| <code>&#x27;symbol&#x27;</code> | The type to check against. |
+
+**Example**  
+```js
+is({}, 'object');
+// => true
+
+is([], 'object');
+// => true
+
+is(null, 'object');
+// => true
+
+is('foo', 'string');
+// => true
+
+is(123, 'number');
+// => true
+```
+<a name="isNil"></a>
+
+## isNil(value) ⇒ <code>boolean</code>
+Checks if `value` is `null` or `undefined`.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns `true` if `value` is nullish, else `false`.  
+**See**: nil, notNil  
+**Since**: 1.2.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
+**Example**  
+```js
+isNil(null)
+// => true
+
+isNil(void 0)
+// => true
+
+isNil(NaN)
+// => false
+```
+<a name="notNil"></a>
+
+## notNil(value) ⇒ <code>boolean</code>
+Checks if `value` is not `null` and not `undefined`.
+
+Complements `isNil`.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns `true` if `value` is not nullish, else `false`.  
+**See**: nil, isNil  
+**Since**: 1.2.1  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
+**Example**  
+```js
+notNil(null)
+// => false
+
+notNil(void 0)
+// => false
+
+notNil(NaN)
+// => true
+```
+<a name="isObject"></a>
+
+## isObject(value) ⇒ <code>boolean</code>
+Checks if `value` is not null and has a typeof 'object'.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns `true` if `value` is an object, else `false`.  
+**Since**: 0.0.1  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
+**Example**  
+```js
+isObject({})
+// => true
+
+isObject([1, 2, 3])
+// => true
+
+isObject(Function)
+// => true
+
+isObject(null)
+// => false
+```
+<a name="isEqual"></a>
+
+## isEqual(value, other) ⇒ <code>boolean</code>
+Compares `value` to `other` and tests for strict equality.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns `true` if the values are strictly equal, else `false`.  
+**Since**: 1.4.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to compare. |
+| other | <code>\*</code> | The other value to compare. |
+
+**Example**  
+```js
+isEqual({}, {})
+// => false
+
+isEqual([], [])
+// => false
+
+const foo = {};
+const bar = foo;
+isEqual(foo, bar);
+// => true
+
+isEqual('a', 'a');
+// => true
+```
+<a name="isFalse"></a>
+
+## isFalse() ⇒ <code>boolean</code>
+Checks if `value` is `false`.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` is equal to `false`.  
+**See**: isTrue, isFalsy, isTruthy, not  
+**Since**: 1.2.0  
+<a name="isFalsy"></a>
+
+## isFalsy(value) ⇒ <code>boolean</code>
+Checks if `value` is falsy.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` is `null`, `undefined' or `false`.  
+**See**: isTrue, isFalse, isTruthy, not  
+**Since**: 1.2.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
+<a name="complement"></a>
+
+## complement(fn) ⇒ <code>boolean</code>
+Given a function returns a function which when invoked will return the logically opposite value.
 
 Note: `0` is considered to be truthy.
 
-### isTruthy
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns `true` if `value` is an object, else `false`.  
+**Since**: 1.2.1  
 
-`isTruthy` complements `isFalsy`.
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>function</code> | The value to check. |
 
-### complement
-
-`complement` given a function will return a function which when invoked will return the logically opposite value.
-
+**Example**  
 ```js
-complement(() => true)(); // false
-complement(() => false)(); // true
-complement(() => nil)(); // true
-complement(() => 0)(); // false
+complement(() => true)();
+// => false
+
+complement(() => false)();
+// => true
+
+complement(() => nil)();
+// => true
+
+complement(() => 0)();
+// => false
 ```
+<a name="isTruthy"></a>
 
-Note: `0` is considered to be truthy.
+## isTruthy(value) ⇒ <code>boolean</code>
+Checks if `value` is truthy.
 
-### isNil
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` is not `null`, not `undefined' and not `false`.  
+**See**: isTrue, isFalse, isFalsy, not  
+**Since**: 0.0.2  
 
-`isNil` given a value returns true when that value is `null` or `undefined', and otherwise returns false.
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
 
-### notNil
+<a name="isString"></a>
 
-`notNil` is the complement of `isNil`.
+## isString(value) ⇒ <code>boolean</code>
+Checks if `value` is a string.
 
-### isArray
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` of type 'string'.  
+**Since**: 0.0.2  
 
-`isArray` is a convenience reference to `Array.isArray`.
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
 
-### is
+<a name="isNumber"></a>
 
-`is` wraps the `typeof` keyword. It takes a value and a string representation of a given JavaScript type and returns a boolean if the given value is of that type.
+## isNumber(value) ⇒ <code>boolean</code>
+Checks if `value` is a number.
 
-```js
-is({}, 'object'); // true
-is([], 'object'); // true
-is(null, 'object'); // true
-is('foo', 'string'); // true
-is(123, 'number'); // true
-```
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` of type 'number'.  
+**Since**: 0.0.2  
 
-### isObject
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
 
-_TODO_
+<a name="isBoolean"></a>
 
-### isEqual
+## isBoolean(value) ⇒ <code>boolean</code>
+Checks if `value` is a boolean.
 
-_TODO_
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` of type 'boolean'.  
+**Since**: 0.0.2  
 
-### isFalse
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
 
-_TODO_
+<a name="isUndefined"></a>
 
-### isString
+## isUndefined(value) ⇒ <code>boolean</code>
+Checks if `value` is undefined.
 
-_TODO_
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` of type 'undefined'.  
+**Since**: 0.0.2  
 
-### isNumber
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
 
-_TODO_
+<a name="isNull"></a>
 
-### isBoolean
+## isNull(value) ⇒ <code>boolean</code>
+Checks if `value` is null.
 
-_TODO_
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` is `null`.  
+**Since**: 0.0.2  
 
-### isUndefined
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
 
-_TODO_
+<a name="isPlainObject"></a>
 
-### isNull
+## isPlainObject(value) ⇒ <code>boolean</code>
+Checks if `value` is a plain object.
 
-_TODO_
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` is a plain old JavaScript object.  
+**Since**: 0.0.1  
 
-### isPlainObject
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
 
-_TODO_
+<a name="not"></a>
 
-### bang
+## not()
+Functional bang.
 
-_TODO_
+**Kind**: global function  
+**Since**: 0.0.1  
+<a name="partial"></a>
 
-### partial
+## partial()
+Partially apply arguments.
 
-_TODO_
+**Kind**: global function  
+<a name="partialRight"></a>
 
-### partialRight
+## partialRight()
+Partially apply arguments, starting from the right of the arguments given
+at call time.
 
-_TODO_
+**Kind**: global function  
+<a name="clone"></a>
 
-### clone
+## clone()
+Deeply clones plain objects and arrays.
 
-_TODO_
+**Kind**: global function  
+<a name="fill"></a>
 
-### fill
+## fill()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="push"></a>
 
-### push
+## push()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="reverse"></a>
 
-### reverse
+## reverse()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="unshift"></a>
 
-### unshift
+## unshift()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="splice"></a>
 
-### splice
+## splice()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="concat"></a>
 
-### concat
+## concat()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="join"></a>
 
-### join
+## join()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="slice"></a>
 
-### slice
+## slice()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="every"></a>
 
-### every
+## every()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="filter"></a>
 
-### filter
+## filter()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="find"></a>
 
-### find
+## find()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="findIndex"></a>
 
-### findIndex
+## findIndex()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="forEach"></a>
 
-### forEach
+## forEach()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="map"></a>
 
-### map
+## map()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="reduce"></a>
 
-### reduce
+## reduce()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="reduceRight"></a>
 
-### reduceRight
+## reduceRight()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="some"></a>
 
-### some
+## some()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="entries"></a>
 
-### entries
+## entries()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="keys"></a>
 
-### keys
+## keys()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="values"></a>
 
-### values
+## values()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="pop"></a>
 
-### pop
+## pop()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="shift"></a>
 
-### shift
+## shift()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="includes"></a>
 
-### includes
+## includes()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="indexOf"></a>
 
-### indexOf
+## indexOf()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="lastIndexOf"></a>
 
-### lastIndexOf
+## lastIndexOf()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="sort"></a>
 
-### sort
+## sort()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="and"></a>
 
-### and
+## and()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="or"></a>
 
-### or
+## or()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="isEquiv"></a>
 
-### isEqiv
+## isEquiv()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="pipe"></a>
 
-### pipe
+## pipe()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="compose"></a>
 
-### compose
+## compose()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="isEmpty"></a>
 
-### isEmpty
+## isEmpty()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="castPath"></a>
 
-### castPath
+## castPath()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="get"></a>
 
-### get
+## get()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="has"></a>
 
-### has
+## has()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="walkPath"></a>
 
-### walkPath
+## walkPath()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="assoc"></a>
 
-### assoc
+## assoc()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="dissoc"></a>
 
-### dissoc
+## dissoc()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="set"></a>
 
-### set
+## set()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="drop"></a>
 
-### drop
+## drop()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="assign"></a>
 
-### assign
+## assign()
+TODO
 
-_TODO_
+**Kind**: global function  
+<a name="merge"></a>
 
-### merge
+## merge()
+TODO
 
-_TODO_
-
-## See Also
+**Kind**: global function  
+# See Also
 
 * [as-needed](https://www.npmjs.com/package/as-needed)
 
-## License
+# License
 
 MIT

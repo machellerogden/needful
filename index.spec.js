@@ -10,7 +10,7 @@ const {
     complement,
     isFalsy,
     isTruthy,
-    bang,
+    not, // TODO
     partial,
     partialRight,
     pipe,
