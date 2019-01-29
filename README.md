@@ -2,6 +2,8 @@
 
 Needful is a functionally-flavored micro library written in ECMAScript 2018.
 
+[![Version](https://img.shields.io/npm/v/needful.svg)]() [![Travis](https://img.shields.io/travis/machellerogden/needful.svg)]() [![License](https://img.shields.io/npm/l/needful.svg)]()
+
 # A few reasons to use Needful:
 * single 3kb export covering the 80% use case
 * immutability by default
