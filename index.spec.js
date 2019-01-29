@@ -11,6 +11,9 @@ const {
     isFalsy,
     isTruthy,
     isZero,
+    isBoolean,
+    isUndefined,
+    isNull,
     not, // TODO
     partial,
     partialRight,
@@ -55,7 +58,7 @@ const {
     isEqiv,
     isEqual,
     merge
-} = require('.');
+} = require(process.env.USE_SRC ? './index.src' : '.');
 
 describe('#nil', () => {
     it('nil is a safe reference to undefined', () => {
@@ -109,6 +112,12 @@ describe('#isEqiv', () => {
     it('compares values with loose equality', () => {
         expect(isEqiv('foo', 'foo')).to.be.true;
         expect(isEqiv({ foo: 'bar' }, { foo: 'bar' })).to.be.true;
+        expect(isEqiv({ foo: 'bar' }, { foo: 'bar', baz: 'qux' })).to.be.false;
+        expect(isEqiv({ foo: 'bar', baz: 'qux' }, { foo: 'bar', baz: 'zzz' })).to.be.false;
+        expect(isEqiv({}, { foo: 'bar' })).to.be.false;
+        expect(isEqiv({}, {})).to.be.true;
+        expect(isEqiv([ 'foo' ], [ 'foo' ])).to.be.true;
+        expect(isEqiv([], [])).to.be.true;
     });
 });
 
@@ -169,8 +178,47 @@ describe('#isZero', () => {
         expect(isZero(true)).to.be.false;
         expect(isZero(false)).to.be.false;
         expect(isZero(null)).to.be.false;
+        expect(isZero(void 0)).to.be.false;
     });
 });
+
+describe('#isBoolean', () => {
+    it('returns true if value is of type "boolean"', () => {
+        expect(isBoolean(true)).to.be.true;
+        expect(isBoolean(false)).to.be.true;
+        expect(isBoolean(0)).to.be.false;
+        expect(isBoolean('0')).to.be.false;
+        expect(isBoolean(null)).to.be.false;
+        expect(isBoolean(void 0)).to.be.false;
+    });
+});
+
+describe('#isUndefined', () => {
+    it('returns true if value is of type "undefined"', () => {
+        expect(isUndefined(nil)).to.be.true;
+        expect(isUndefined(undefined)).to.be.true;
+        expect(isUndefined(void 0)).to.be.true;
+        expect(isUndefined(true)).to.be.false;
+        expect(isUndefined(false)).to.be.false;
+        expect(isUndefined(0)).to.be.false;
+        expect(isUndefined('0')).to.be.false;
+        expect(isUndefined(null)).to.be.false;
+    });
+});
+
+describe('#isNull', () => {
+    it('returns true if value is null', () => {
+        expect(isNull(null)).to.be.true;
+        expect(isNull(nil)).to.be.false;
+        expect(isNull(undefined)).to.be.false;
+        expect(isNull(void 0)).to.be.false;
+        expect(isNull(true)).to.be.false;
+        expect(isNull(false)).to.be.false;
+        expect(isNull(0)).to.be.false;
+        expect(isNull('0')).to.be.false;
+    });
+});
+
 
 describe('#partial', () => {
     it('takes a given function and an arbitrary number of addtional arguments and returns a new function which will concat the given arguments with any arguments which are passed to the new function and apply them to the given function.', () => {
@@ -712,6 +760,36 @@ describe('#merge', () => {
                 bam: 'boom'
             }
         });
+        expect(merge({
+            foo: {
+                bar: 'baz',
+                qux: [
+                    'foo'
+                ]
+            }
+        }, {})).to.eql({
+            foo: {
+                bar: 'baz',
+                qux: [
+                    'foo'
+                ]
+            }
+        });
+        expect(merge({}, {
+            foo: {
+                bar: 'baz',
+                qux: [
+                    'foo'
+                ]
+            }
+        })).to.eql({
+            foo: {
+                bar: 'baz',
+                qux: [
+                    'foo'
+                ]
+            }
+        });
     });
 });
 
@@ -965,7 +1043,7 @@ describe('#slice', () => {
 
 describe('#entries', () => {
     it('returns a new array containing key value pairs of given object or array', () => {
-        expect(entries([ 1, 2, 3 ])).to.eql([ [ 0, 1], [ 1, 2 ], [ 2, 3] ]);
+        expect(entries([ 1, 2, 3 ])).to.eql([ [ 0, 1], [ 1, 2 ], [ 2, 3 ] ]);
         expect(entries({ foo: 'bar', baz: 'qux', bam: 'boom' })).to.eql([ [ 'foo', 'bar' ], [ 'baz', 'qux' ], [ 'bam', 'boom' ] ]);
     });
 });
@@ -975,12 +1053,20 @@ describe('#every', () => {
         expect(every([ 1, 2, 3 ], v => typeof v === 'number')).to.be.true;
         expect(every([ 1, 'foo', 3 ], v => typeof v === 'number')).to.be.false;
     });
+    it('is null safe', () => {
+        // null defaults to empty array and we get true because all 0 members pass the predicate
+        // TODO: reconsider this behavior
+        expect(every(null, v => typeof v === 'number')).to.be.true;
+    });
 });
 
 describe('#filter', () => {
     it('returns new array containing only elements of given array which pass given predicate', () => {
-        expect(filter([ 1, 2, 3 ], v => v % 2)).to.eql([ 1, 3]);
+        expect(filter([ 1, 2, 3 ], v => v % 2)).to.eql([ 1, 3 ]);
         // TODO: test immutability
+    });
+    it('is null safe', () => {
+        expect(filter(null, v => typeof v === 'number')).to.eql([]);
     });
 });
 
@@ -989,12 +1075,19 @@ describe('#find', () => {
         expect(find([ 1, 2, 3 ], v => v === 2)).to.eql(2);
         // TODO: test immutability
     });
+    it('is null safe', () => {
+        expect(find(null, v => v === 'foo')).to.be.undefined;
+    });
 });
 
 describe('#findIndex', () => {
     it('returns index of first element from given array which matches predicate', () => {
         expect(findIndex([ 1, 2, 3 ], v => v === 2)).to.eql(1);
         // TODO: test immutability
+    });
+    it('is null safe', () => {
+        // TODO: reconsider decision to expose native behavior ... maybe nil instead of -1?
+        expect(findIndex(null, v => v === 'foo')).to.eql(-1);
     });
 });
 
@@ -1012,12 +1105,18 @@ describe('#map', () => {
         expect(map([ 'foo', 'bar' ], v => v + 'boom')).to.eql([ 'fooboom', 'barboom' ]);
         // TODO - more tests
     });
+    it('is null safe', () => {
+        expect(map(null, v => v)).to.eql([]);
+    });
 });
 
 describe('#reduce', () => {
     it('returns a new accumulated value based on given array and a reducing function', () => {
         expect(reduce([ 'foo', 'bar', 'baz' ], (a = '', v) => (a += v, a))).to.eql('foobarbaz');
         // TODO - more tests
+    });
+    it('is null safe', () => {
+        expect(reduce(null, (a, v) => '' + a + v, 'foo')).to.eql('foo');
     });
 });
 
@@ -1026,12 +1125,18 @@ describe('#reduceRight', () => {
         expect(reduceRight([ 'foo', 'bar', 'baz' ], (a = '', v) => (a += v, a))).to.eql('bazbarfoo');
         // TODO - more tests
     });
+    it('is null safe', () => {
+        expect(reduceRight(null, (a, v) => '' + a + v, 'foo')).to.eql('foo');
+    });
 });
 
 describe('#some', () => {
     it('returns boolean indicating if given predicate returns true for each element in a given array', () => {
         expect(some([ 'foo', 'bar', 3 ], v => typeof v === 'number')).to.be.true;
         expect(some([ 'foo', 'bar', 'baz' ], v => typeof v === 'number')).to.be.false;
+    });
+    it('is null safe', () => {
+        expect(some(null, v => typeof v === 'number')).to.be.false;
     });
 });
 

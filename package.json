@@ -11,6 +11,7 @@
     "build": "minify index.src.js -o index.js",
     "pretest": "npm run build",
     "test": "mocha index.spec.js",
+    "coverage": "USE_SRC=true nyc --reporter lcov npm test",
     "generate-docs": "jsdoc2md --template README.hbs --files ./index.src.js > README.md",
     "clean-check": "git diff --exit-code 2>/dev/null && git diff --cached --exit-code 2>/dev/null || echo 'Please commit changes before publishing.'",
     "prepare": "npm run test && npm run generate-docs && npm run clean-check"
@@ -29,6 +30,7 @@
     "chai": "^4.1.2",
     "jsdoc-to-markdown": "^4.0.1",
     "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "pre-commit": "^1.2.2"
   },
   "engines": {
