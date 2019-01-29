@@ -32,8 +32,7 @@ Needful does the needful, and no more.
 ## nil : <code>undefined</code>
 A safe reference to `undefined`.
 
-While it rarely happens in practice, `undefined` is not a keyword and it
-possible for it to be shadowed.
+While it rarely happens in practice, `undefined` is not a keyword and it possible for it to be shadowed.
 
 **Kind**: global variable  
 **See**: isNil, notNil  
@@ -257,6 +256,21 @@ Checks if `value` is truthy.
 | --- | --- | --- |
 | value | <code>\*</code> | The value to check. |
 
+<a name="isZero"></a>
+
+## isZero(value) ⇒ <code>boolean</code>
+Checks if `value` is `0`.
+
+JavaScript treats `0` as falsy, Needful treats `0` as truthy, so it makes sense to provide a functional helper for `0` checks.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` is `0`.  
+**Since**: 1.5.3  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
 <a name="isString"></a>
 
 ## isString(value) ⇒ <code>boolean</code>
@@ -344,53 +358,154 @@ Functional bang.
 **Since**: 0.0.1  
 <a name="partial"></a>
 
-## partial()
+## partial(fn, ...args)
 Partially apply arguments.
 
 **Kind**: global function  
+**Since**: 0.0.1  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>function</code> | Function to partial apply arguments to. |
+| ...args | <code>\*</code> | Argument to partially apply. |
+
+**Example**  
+```js
+const concat = (a, b) => '' + a + b;
+const fooify = partial(concat, 'foo');
+fooify('bar');
+// => 'foobar'
+```
 <a name="partialRight"></a>
 
-## partialRight()
-Partially apply arguments, starting from the right of the arguments given
-at call time.
+## partialRight(fn, ...args)
+Partially apply arguments, starting from the right of the arguments given at call time.
 
 **Kind**: global function  
+**Since**: 0.0.1  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>function</code> | Function to partial apply arguments to. |
+| ...args | <code>\*</code> | Argument to partially apply. |
+
+**Example**  
+```js
+const concat = (a, b) => '' + a + b;
+const fooify = partialRight(concat, 'foo');
+fooify('bar');
+// => 'barfoo'
+```
 <a name="clone"></a>
 
-## clone()
-Deeply clones plain objects and arrays.
+## clone(value)
+Deeply clones plain objects and arrays. Primitives are passed through unchanged.
 
 **Kind**: global function  
+**Since**: 1.5.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | Value to clone. |
+
 <a name="fill"></a>
 
-## fill()
-TODO
+## fill(array, value, start, end) ⇒ <code>Array</code>
+Fills all the elements of an array from a start index to an end index with a static value. The end index is not included.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array filled with given value from given start index through given end index.  
+**Since**: 1.2.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array |
+| value | <code>\*</code> | Value to fill. |
+| start | <code>number</code> | Start index, defaults to `0`. |
+| end | <code>number</code> | End index. |
+
+**Example**  
+```js
+fill([ 1, 2, 3, 4 ], 0, 2, 4);
+// => [1, 2, 0, 0]
+```
 <a name="push"></a>
 
-## push()
-TODO
+## push(array, ...value) ⇒ <code>Array</code>
+Adds one or more elements to the end of an array.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array with given value(s) added to the end.  
+**Since**: 1.2.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array |
+| ...value | <code>\*</code> | Value(s) to be added. |
+
+**Example**  
+```js
+push([ 1, 2, 3 ], 4);
+// => [1, 2, 3, 4]
+```
 <a name="reverse"></a>
 
-## reverse()
-TODO
+## reverse(array) ⇒ <code>Array</code>
+Reverse the order of a given array.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array with values in reverse order.  
+**Since**: 1.2.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array |
+
+**Example**  
+```js
+reverse([ 1, 2, 3 ]);
+// => [3, 2, 1]
+```
 <a name="unshift"></a>
 
-## unshift()
-TODO
+## unshift(array, ...value) ⇒ <code>Array</code>
+Adds one or more elements to the beginning of an array.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array with given value(s) added to the beginning.  
+**Since**: 1.2.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array |
+| ...value | <code>\*</code> | Value(s) to be added. |
+
+**Example**  
+```js
+unshift([ 1, 2, 3 ], 0);
+// => [0, 1, 2, 3]
+```
 <a name="splice"></a>
 
-## splice()
-TODO
+## splice(array, start, count, ...values) ⇒ <code>Array</code>
+Changes the contents of an array by removing or replacing existing elements and/or adding new elements.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array with `count` elements removed from `start` and `values` added at `start`.  
+**Since**: 1.2.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array |
+| start | <code>number</code> | Start index. |
+| count | <code>number</code> | Delete count. |
+| ...values | <code>\*</code> | Values to add. |
+
+**Example**  
+```js
+splice([ 1, 2, 3, 4 ], 1, 1, 4);
+// => [1, 4, 3, 4]
+```
 <a name="concat"></a>
 
 ## concat()

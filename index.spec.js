@@ -10,6 +10,7 @@ const {
     complement,
     isFalsy,
     isTruthy,
+    isZero,
     not, // TODO
     partial,
     partialRight,
@@ -135,6 +136,7 @@ describe('#isFalsy', () => {
         expect(isFalsy(null)).to.be.true;
         expect(isFalsy(false)).to.be.true;
         expect(isFalsy(0)).to.be.false;
+        expect(isFalsy('0')).to.be.false;
         expect(isFalsy('')).to.be.false;
         expect(isFalsy('foo')).to.be.false;
         expect(isFalsy([])).to.be.false;
@@ -150,12 +152,23 @@ describe('#isTruthy', () => {
         expect(isTruthy(null)).to.be.false;
         expect(isTruthy(false)).to.be.false;
         expect(isTruthy(0)).to.be.true;
+        expect(isTruthy('0')).to.be.true;
         expect(isTruthy('')).to.be.true;
         expect(isTruthy('foo')).to.be.true;
         expect(isTruthy([])).to.be.true;
         expect(isTruthy([ 1, 2, 3 ])).to.be.true;
         expect(isTruthy({})).to.be.true;
         expect(isTruthy({ foo: 'bar' })).to.be.true;
+    });
+});
+
+describe('#isZero', () => {
+    it('returns true if zero', () => {
+        expect(isZero(0)).to.be.true;
+        expect(isZero('0')).to.be.false;
+        expect(isZero(true)).to.be.false;
+        expect(isZero(false)).to.be.false;
+        expect(isZero(null)).to.be.false;
     });
 });
 

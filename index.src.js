@@ -4,8 +4,7 @@ const _ = exports;
 /**
  * A safe reference to `undefined`.
  *
- * While it rarely happens in practice, `undefined` is not a keyword and it
- * possible for it to be shadowed.
+ * While it rarely happens in practice, `undefined` is not a keyword and it possible for it to be shadowed.
  *
  * @since 1.2.0
  * @name nil
@@ -205,6 +204,18 @@ _.complement = fn => (...args) => _.isFalsy(fn(...args));
 _.isTruthy = _.complement(_.isFalsy);
 
 /**
+ * Checks if `value` is `0`.
+ *
+ * JavaScript treats `0` as falsy, Needful treats `0` as truthy, so it makes sense to provide a functional helper for `0` checks.
+ *
+ * @since 1.5.3
+ * @function isZero
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns true when `value` is `0`.
+ */
+_.isZero = v => v === 0;
+
+/**
  * Checks if `value` is a string.
  *
  * @since 0.0.2
@@ -276,22 +287,41 @@ _.not = _.isFalsy;
 /**
  * Partially apply arguments.
  *
+ * @since 0.0.1
  * @function partial
+ * @param {Function} fn Function to partial apply arguments to.
+ * @param {...*} args Argument to partially apply.
+ * @example
+ *
+ * const concat = (a, b) => '' + a + b;
+ * const fooify = partial(concat, 'foo');
+ * fooify('bar');
+ * // => 'foobar'
  */
 _.partial = (fn, ...args) => (...rest) => fn(...[ ...args, ...rest ]);
 
 /**
- * Partially apply arguments, starting from the right of the arguments given
- * at call time.
+ * Partially apply arguments, starting from the right of the arguments given at call time.
  *
+ * @since 0.0.1
  * @function partialRight
+ * @param {Function} fn Function to partial apply arguments to.
+ * @param {...*} args Argument to partially apply.
+ * @example
+ *
+ * const concat = (a, b) => '' + a + b;
+ * const fooify = partialRight(concat, 'foo');
+ * fooify('bar');
+ * // => 'barfoo'
  */
 _.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
 
 /**
- * Deeply clones plain objects and arrays.
+ * Deeply clones plain objects and arrays. Primitives are passed through unchanged.
  *
+ * @since 1.5.0
  * @function clone
+ * @param {*} value Value to clone.
  */
 _.clone = x => _.isArray(x)
     ? [ ...x ].map(_.clone)
@@ -300,38 +330,82 @@ _.clone = x => _.isArray(x)
         : x;
 
 [
+
 /**
- * TODO
+ * Fills all the elements of an array from a start index to an end index with a static value. The end index is not included.
  *
+ * @since 1.2.0
  * @function fill
+ * @param {Array} array Array
+ * @param {*} value Value to fill.
+ * @param {number} start Start index, defaults to `0`.
+ * @param {number} end End index.
+ * @returns {Array} Returns new array filled with given value from given start index through given end index.
+ * @example
+ *
+ * fill([ 1, 2, 3, 4 ], 0, 2, 4);
+ * // => [1, 2, 0, 0]
  */
     'fill',
 
 /**
- * TODO
+ * Adds one or more elements to the end of an array.
  *
+ * @since 1.2.0
  * @function push
+ * @param {Array} array Array
+ * @param {...*} value Value(s) to be added.
+ * @returns {Array} Returns new array with given value(s) added to the end.
+ * @example
+ *
+ * push([ 1, 2, 3 ], 4);
+ * // => [1, 2, 3, 4]
  */
     'push',
 
 /**
- * TODO
+ * Reverse the order of a given array.
  *
+ * @since 1.2.0
  * @function reverse
+ * @param {Array} array Array
+ * @returns {Array} Returns new array with values in reverse order.
+ * @example
+ *
+ * reverse([ 1, 2, 3 ]);
+ * // => [3, 2, 1]
  */
     'reverse',
 
 /**
- * TODO
+ * Adds one or more elements to the beginning of an array.
  *
+ * @since 1.2.0
  * @function unshift
+ * @param {Array} array Array
+ * @param {...*} value Value(s) to be added.
+ * @returns {Array} Returns new array with given value(s) added to the beginning.
+ * @example
+ *
+ * unshift([ 1, 2, 3 ], 0);
+ * // => [0, 1, 2, 3]
  */
     'unshift',
 
 /**
- * TODO
+ * Changes the contents of an array by removing or replacing existing elements and/or adding new elements.
  *
+ * @since 1.2.0
  * @function splice
+ * @param {Array} array Array
+ * @param {number} start Start index.
+ * @param {number} count Delete count.
+ * @param {...*} values Values to add.
+ * @returns {Array} Returns new array with `count` elements removed from `start` and `values` added at `start`.
+ * @example
+ *
+ * splice([ 1, 2, 3, 4 ], 1, 1, 4);
+ * // => [1, 4, 3, 4]
  */
     'splice'
 ].forEach((k, r) => _[k] = (v, ...args) => (r = _.clone(v) || [], [][k].apply(r, args), r));
