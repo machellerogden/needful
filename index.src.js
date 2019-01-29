@@ -412,9 +412,15 @@ _.clone = x => _.isArray(x)
 
 [
 /**
- * TODO
+ * Merges two or more arrays.
  *
  * @function concat
+ * @param {...Array} arrays Arrays to merge.
+ * @returns {Array} Returns new array with `arrays` concatenated.
+ * @example
+ *
+ * concat([ 1, 2 ], [ 3, 4 ]);
+ * // => [1, 2, 3, 4]
  */
     'concat',
 
