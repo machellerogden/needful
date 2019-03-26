@@ -1,5 +1,7 @@
 'use strict';
 const _ = exports;
+const { clone } = require('mediary');
+_.clone = clone;
 
 /**
  * A safe reference to `undefined`.
@@ -323,10 +325,10 @@ _.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
  * @function clone
  * @param {*} value Value to clone.
  */
-_.clone = x => _.isArray(x)
-    ? [ ...x ].map(_.clone)
+_.deepClone = x => _.isArray(x)
+    ? [ ...x ].map(_.deepClone)
     : _.isObject(x)
-        ? Object.entries({ ...x }).reduce((a, [k, v]) => (a[k] = _.clone(v), a), {})
+        ? Object.entries({ ...x }).reduce((a, [k, v]) => (a[k] = _.deepClone(v), a), {})
         : x;
 
 [
@@ -408,7 +410,7 @@ _.clone = x => _.isArray(x)
  * // => [1, 4, 3, 4]
  */
     'splice'
-].forEach((k, r) => _[k] = (v, ...args) => (r = _.clone(v) || [], [][k].apply(r, args), r));
+].forEach((k, r) => _[k] = (v, ...args) => (r = clone(v) || [], [][k].apply(r, args), r));
 
 [
 /**
@@ -500,7 +502,7 @@ _.clone = x => _.isArray(x)
  * @function some
  */
     'some'
-].forEach(k => _[k] = (v, ...args) => [][k].apply(_.clone(v) || [], args.map(_.clone)));
+].forEach(k => _[k] = (v, ...args) => [][k].apply(clone(v) || [], args.map(clone)));
 
 [
 /**
@@ -539,7 +541,7 @@ _.clone = x => _.isArray(x)
  * @function shift
  */
     'shift'
-].forEach(k => _[k] = v => _.clone(v)[k]());
+].forEach(k => _[k] = v => clone(v)[k]());
 
 [
 /**
@@ -569,7 +571,7 @@ _.clone = x => _.isArray(x)
  *
  * @function sort
  */
-_.sort = (v, fn) => _.clone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
+_.sort = (v, fn) => clone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
 
 /**
  * TODO
@@ -687,7 +689,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
             : {}
         : mutate
             ? o
-            : _.clone(o) || {};
+            : clone(o) || {};
     let cursor = result;
     while (kp.length) {
         let c = kp.shift();
@@ -705,7 +707,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
  */
 _.assoc = (o, p, v, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? c[k] = v
-    : c[k] = _.clone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
+    : c[k] = clone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
 
 /**
  * TODO
@@ -716,7 +718,7 @@ _.dissoc = (o, p, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? _.isArray(c)
         ? c.splice(_.isNil(n), c.length)
         : (delete c[k])
-    : c[k] = _.clone(c[k]) || {}), m);
+    : c[k] = clone(c[k]) || {}), m);
 
 /**
  * TODO

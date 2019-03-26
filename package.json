@@ -8,8 +8,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "minify index.src.js -o index.js",
-    "pretest": "npm run build",
+    "build": "webpack --mode production",
     "test": "mocha index.spec.js",
     "coverage": "USE_SRC=true nyc --reporter lcov npm test",
     "generate-docs": "jsdoc2md --template README.hbs --files ./index.src.js > README.md",
@@ -25,13 +24,20 @@
   "author": "Mac Heller-Ogden",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "async-stream-generator": "^1.0.3",
+    "babel-loader": "^8.0.5",
     "babel-minify": "^0.5.0",
+    "babel-minify-webpack-plugin": "^0.3.1",
+    "babel-preset-minify": "^0.5.0",
     "chai": "^4.1.2",
     "jsdoc-to-markdown": "^4.0.1",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
-    "pre-commit": "^1.2.2"
+    "pre-commit": "^1.2.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
   },
   "engines": {
     "node": ">=10.15.0",
@@ -39,5 +45,8 @@
   },
   "precommit": [
     "test"
-  ]
+  ],
+  "dependencies": {
+    "mediary": "^0.2.10"
+  }
 }
