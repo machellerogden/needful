@@ -1,31 +1,48 @@
 # Needful
 
-Needful is a functionally-flavored micro library written in ECMAScript 2018.
+> Needful is a functionally-flavored micro library written in ECMAScript 2018.
 
 [![Version](https://img.shields.io/npm/v/needful.svg)]() [![Travis](https://img.shields.io/travis/machellerogden/needful.svg)]() [![License](https://img.shields.io/npm/l/needful.svg)]()
-
-# A few reasons to use Needful:
-* single 3kb export covering the 80% use case
-* immutability by default
-* `0` == `true`
-
-# Why not use lodash / ramda / underscore?
 
 > You can't always get what you want
 > But if you try sometimes you just might find
 > You get what you need
 
-Want a feature that Needful is missing? Use [Lodash](https://lodash.com/). It's got you covered.
+# A few reasons to use Needful:
 
-Want automatic currying? Use [Ramda](https://ramdajs.com/). It's got your back.
+* One tiny little UMD that covers the 90% use-case for functional-style JavaScript programming.
+* All of the same `Array.prototype` methods you already know, but as immutable functions.
+* Some of the most useful parts of lodash (such as keypath operations) without all the pieces you probably don't need.
+* You understand how useful it is when `0` == `true` (clojurist-friendly)
+* Did we mention immutability (with structural sharing courtest of [mediary](https://www.npmjs.com/package/mediary))?
+
+# Why not use lodash / ramda / underscore?
+
+Do you want a feature that Needful is missing? Use [Lodash](https://lodash.com/). It's got you covered.
+
+Need automatic currying? Use [Ramda](https://ramdajs.com/). It's got your back.
 
 Want something time-tested and battle-hardened? Use [Underscore](https://underscorejs.org/). It's been around forever—and it works.
 
-Needful is smaller (3kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
+Needful is smaller (~16kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
 
 Needful does the needful, and no more.
 
 # API
+
+<a name="clone"></a>
+
+## clone ⇒ <code>\*</code>
+Fast, cheap & deep clone-like objects courtesy of [mediary](https://www.npmjs.com/package/mediary).
+
+**Kind**: global variable  
+**Returns**: <code>\*</code> - Returns cloned Object, Array or passes thru other values  
+**See**: deepClone  
+**Since**: 1.6.0  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | Value to clone. |
 
 <a name="nil"></a>
 
@@ -398,10 +415,11 @@ fooify('bar');
 ```
 <a name="clone"></a>
 
-## clone(value)
+## clone(value) ⇒ <code>\*</code>
 Deeply clones plain objects and arrays. Primitives are passed through unchanged.
 
 **Kind**: global function  
+**Returns**: <code>\*</code> - Returns cloned Object, Array or passes thru other values  
 **Since**: 1.5.0  
 
 | Param | Type | Description |
@@ -508,16 +526,39 @@ splice([ 1, 2, 3, 4 ], 1, 1, 4);
 ```
 <a name="concat"></a>
 
-## concat()
-TODO
+## concat(...arrays) ⇒ <code>Array</code>
+Merges two or more arrays.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array with `arrays` concatenated.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...arrays | <code>Array</code> | Arrays to merge. |
+
+**Example**  
+```js
+concat([ 1, 2 ], [ 3, 4 ]);
+// => [1, 2, 3, 4]
+```
 <a name="join"></a>
 
-## join()
-TODO
+## join(array, separator) ⇒ <code>Array</code>
+Joins all elements of an array into a string.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns string with all elements of array joined. If given array is empty, returns empty string.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array to join. |
+| separator | <code>string</code> | String which separates each pair of adjacent elements of the array. |
+
+**Example**  
+```js
+join([ 'a', 'b', 'c' ], '-');
+// => 'a-b-c'
+```
 <a name="slice"></a>
 
 ## slice()
