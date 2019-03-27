@@ -322,20 +322,20 @@ describe('#castPath', () => {
 
 describe('#get', () => {
     it('returns value at given path', () => {
-        expect(get({ foo: { bar: 'baz' } }, 'foo.bar')).to.equal('baz');
-        expect(get({ foo: { bar: 'baz' } }, 'foo["bar"]')).to.equal('baz');
-        expect(get({ foo: [ "bar", { baz: "qux" } ] }, 'foo[1].baz')).to.equal('qux');
-        expect(get({ foo: { bar: 'baz' } }, [ 'foo', 'bar' ])).to.equal('baz');
-        expect(get({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 1, 'baz' ])).to.equal('qux');
-        expect(get({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 2, 'does', 'not', 'exist' ])).to.be.undefined;
+        expect(get('foo.bar', { foo: { bar: 'baz' } })).to.equal('baz');
+        expect(get('foo["bar"]', { foo: { bar: 'baz' } })).to.equal('baz');
+        expect(get('foo[1].baz', { foo: [ "bar", { baz: "qux" } ] })).to.equal('qux');
+        expect(get([ 'foo', 'bar' ], { foo: { bar: 'baz' } })).to.equal('baz');
+        expect(get([ 'foo', 1, 'baz' ], { foo: [ "bar", { baz: "qux" } ] })).to.equal('qux');
+        expect(get([ 'foo', 2, 'does', 'not', 'exist' ], { foo: [ "bar", { baz: "qux" } ] })).to.be.undefined;
     });
 });
 
 describe('#has', () => {
     it('returns value at given path', () => {
-        expect(has({ foo: [ "bar", { baz: "qux" } ] }, 'foo[1].baz' )).to.be.true;
-        expect(has({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 1, 'baz' ])).to.be.true;
-        expect(has({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 1, 'qux' ])).to.be.false;
+        expect(has('foo[1].baz' , { foo: [ "bar", { baz: "qux" } ] })).to.be.true;
+        expect(has([ 'foo', 1, 'baz' ], { foo: [ "bar", { baz: "qux" } ] })).to.be.true;
+        expect(has([ 'foo', 1, 'qux' ], { foo: [ "bar", { baz: "qux" } ] })).to.be.false;
     });
 });
 
@@ -348,7 +348,7 @@ describe('#assoc', () => {
                 bar: 'baz'
             }
         };
-        result = assoc(obj, 'foo.bar', 'qux');
+        result = assoc('foo.bar', 'qux', obj);
         expect(result).to.eql({
             foo: {
                 bar: 'qux'
@@ -368,7 +368,7 @@ describe('#assoc', () => {
                 ]
             }
         };
-        result = assoc(obj, 'foo.bar[1]', 'foo');
+        result = assoc('foo.bar[1]', 'foo', obj);
         expect(result).to.eql({
             foo: {
                 bar: [
@@ -396,7 +396,7 @@ describe('#assoc', () => {
                 ]
             }
         };
-        result = assoc(obj, 'foo.bar[1].bam', 'boom');
+        result = assoc('foo.bar[1].bam', 'boom', obj);
         expect(result).to.eql({
             foo: {
                 bar: [
@@ -420,7 +420,7 @@ describe('#assoc', () => {
         });
         expect(obj).not.to.equal(result);
         obj = {};
-        result = assoc({}, 'foo.bar[1]', 'foo');
+        result = assoc('foo.bar[1]', 'foo', {});
         expect(result).to.eql({
             foo: {
                 bar: [
@@ -432,7 +432,7 @@ describe('#assoc', () => {
         expect(obj).to.eql({});
         expect(obj).not.to.equal(result);
         obj = {};
-        result = assoc(obj, 'foo.bar[1].qux', 'xyzzy');
+        result = assoc('foo.bar[1].qux', 'xyzzy', obj);
         expect(result).to.eql({
             foo: {
                 bar: [
@@ -446,7 +446,7 @@ describe('#assoc', () => {
         expect(obj).to.eql({});
         expect(obj).not.to.equal(result);
         obj = [];
-        result = assoc(obj, '[0].qux', 'xyzzy');
+        result = assoc('[0].qux', 'xyzzy', obj);
         expect(result).to.eql([
             {
                 qux: 'xyzzy'
@@ -455,7 +455,7 @@ describe('#assoc', () => {
         expect(obj).to.eql([]);
         expect(obj).not.to.equal(result);
         obj = [];
-        result = assoc(obj, '[1].qux', 'xyzzy');
+        result = assoc('[1].qux', 'xyzzy', obj);
         expect(result).to.eql([
             void 0,
             {
@@ -465,12 +465,12 @@ describe('#assoc', () => {
         expect(obj).to.eql([]);
         expect(obj).not.to.equal(result);
         obj = [];
-        result = assoc(obj, '[0]', 'xyzzy');
+        result = assoc('[0]', 'xyzzy', obj);
         expect(result).to.eql([ 'xyzzy' ]);
         expect(obj).to.eql([]);
         expect(obj).not.to.equal(result);
-        expect(assoc(null, '[0]', 'xyzzy')).to.eql([ 'xyzzy' ]);
-        expect(assoc(null, 'foo', 'bar')).to.eql({ foo: 'bar' });
+        expect(assoc('[0]', 'xyzzy', null)).to.eql([ 'xyzzy' ]);
+        expect(assoc('foo', 'bar', null)).to.eql({ foo: 'bar' });
     });
 });
 
@@ -483,7 +483,7 @@ describe('#set', () => {
                 bar: 'baz'
             }
         };
-        result = set(obj, 'foo.bar', 'qux');
+        result = set('foo.bar', 'qux', obj);
         expect(obj).to.eql({
             foo: {
                 bar: 'qux'
@@ -498,7 +498,7 @@ describe('#set', () => {
                 ]
             }
         };
-        result = set(obj, 'foo.bar[1]', 'foo');
+        result = set('foo.bar[1]', 'foo', obj);
         expect(obj).to.eql({
             foo: {
                 bar: [
@@ -518,7 +518,7 @@ describe('#set', () => {
                 ]
             }
         };
-        result = set(obj, 'foo.bar[1].bam', 'boom');
+        result = set('foo.bar[1].bam', 'boom', obj);
         expect(obj).to.eql({
             foo: {
                 bar: [
@@ -532,7 +532,7 @@ describe('#set', () => {
         });
         expect(result).to.equal(obj);
         obj = {};
-        result = set(obj, 'foo.bar[1]', 'foo');
+        result = set('foo.bar[1]', 'foo', obj);
         expect(obj).to.eql({
             foo: {
                 bar: [
@@ -543,7 +543,7 @@ describe('#set', () => {
         });
         expect(result).to.equal(obj);
         obj = {};
-        result = set(obj, 'foo.bar[1].qux', 'xyzzy');
+        result = set('foo.bar[1].qux', 'xyzzy', obj);
         expect(obj).to.eql({
             foo: {
                 bar: [
@@ -556,7 +556,7 @@ describe('#set', () => {
         });
         expect(result).to.equal(obj);
         obj = [];
-        result = set(obj, '[0].qux', 'xyzzy');
+        result = set('[0].qux', 'xyzzy', obj);
         expect(obj).to.eql([
             {
                 qux: 'xyzzy'
@@ -564,7 +564,7 @@ describe('#set', () => {
         ]);
         expect(result).to.equal(obj);
         obj = [];
-        result = set(obj, '[1].qux', 'xyzzy');
+        result = set('[1].qux', 'xyzzy', obj);
         expect(obj).to.eql([
             void 0,
             {
@@ -573,11 +573,11 @@ describe('#set', () => {
         ]);
         expect(result).to.equal(obj);
         obj = [];
-        result = set(obj, '[0]', 'xyzzy');
+        result = set('[0]', 'xyzzy', obj);
         expect(obj).to.eql([ 'xyzzy' ]);
         expect(result).to.equal(obj);
-        expect(set(null, '[0]', 'xyzzy')).to.eql([ 'xyzzy' ]);
-        expect(set(null, 'foo', 'bar')).to.eql({ foo: 'bar' });
+        expect(set('[0]', 'xyzzy', null)).to.eql([ 'xyzzy' ]);
+        expect(set('foo', 'bar', null)).to.eql({ foo: 'bar' });
     });
 });
 
@@ -590,7 +590,7 @@ describe('#dissoc', () => {
                 bar: 'baz'
             }
         };
-        result = dissoc(obj, 'foo.bar');
+        result = dissoc('foo.bar', obj);
         expect(result).to.eql({
             foo: {}
         });
@@ -608,7 +608,7 @@ describe('#dissoc', () => {
                 ]
             }
         };
-        result = dissoc(obj, 'foo.bar[1]');
+        result = dissoc('foo.bar[1]', obj);
         expect(result).to.eql({
             foo: {
                 bar: [
@@ -636,7 +636,7 @@ describe('#dissoc', () => {
                 ]
             }
         };
-        result = dissoc(obj, 'foo.bar[1].qux');
+        result = dissoc('foo.bar[1].qux', obj);
         expect(result).to.eql({
             foo: {
                 bar: [
@@ -671,7 +671,7 @@ describe('#drop', () => {
                 bar: 'baz'
             }
         };
-        result = drop(obj, 'foo.bar');
+        result = drop('foo.bar', obj);
         expect(obj).to.eql({
             foo: {}
         });
@@ -684,7 +684,7 @@ describe('#drop', () => {
                 ]
             }
         };
-        result = drop(obj, 'foo.bar[1]');
+        result = drop('foo.bar[1]', obj);
         expect(obj).to.eql({
             foo: {
                 bar: [
@@ -704,7 +704,7 @@ describe('#drop', () => {
                 ]
             }
         };
-        result = drop(obj, 'foo.bar[1].qux');
+        result = drop('foo.bar[1].qux', obj);
         expect(obj).to.eql({
             foo: {
                 bar: [
@@ -817,7 +817,7 @@ describe('#fill', () => {
         let arr;
         let result;
         arr = [ 1, 2, 3, 4 ];
-        result = fill(arr, 0, 2, 4);
+        result = fill(0, 2, 4, arr);
         expect(result).to.eql([
             1,
             2,
@@ -826,7 +826,7 @@ describe('#fill', () => {
         ]);
         expect(arr).not.to.equal(result);
         arr = new Array(4);
-        result = fill(arr, 4);
+        result = fill(4, arr);
         expect(result).to.eql([
             4,
             4,
@@ -835,7 +835,7 @@ describe('#fill', () => {
         ]);
         expect(arr).not.to.equal(result);
         arr = new Array(4);
-        result = fill(arr, 4, 1);
+        result = fill(4, 1, arr);
         expect(result).to.eql([
             void 0,
             4,
@@ -875,7 +875,7 @@ describe('#push', () => {
         let arr;
         let result;
         arr = [ 1, 2, 3 ];
-        result = push(arr, 4);
+        result = push(4, arr);
         expect(result).to.eql([ 1, 2, 3, 4 ]);
         expect(arr).to.eql([ 1, 2, 3 ]);
         expect(arr).not.to.equal(result);
@@ -887,7 +887,7 @@ describe('#unshift', () => {
         let arr;
         let result;
         arr = [ 2, 3, 4 ];
-        result = unshift(arr, 1);
+        result = unshift(1, arr);
         expect(result).to.eql([ 1, 2, 3, 4 ]);
         expect(arr).to.eql([ 2, 3, 4 ]);
         expect(arr).not.to.equal(result);
@@ -911,17 +911,17 @@ describe('#sort', () => {
         let arr;
         let result;
         arr = [ 2, 1, 3 ];
-        result = sort(arr);
+        result = sort(nil, arr);
         expect(result).to.eql([ 1, 2, 3 ]);
         expect(arr).to.eql([ 2, 1, 3 ]);
         expect(arr).not.to.equal(result);
         arr = [ 12, 1, 3 ];
-        result = sort(arr);
+        result = sort(nil, arr);
         expect(result).to.eql([ 1, 3, 12 ]);
         expect(arr).to.eql([ 12, 1, 3 ]);
         expect(arr).not.to.equal(result);
         arr = [ 'b', 'a', 'c' ];
-        result = sort(arr);
+        result = sort(nil, arr);
         expect(result).to.eql([ 'a', 'b', 'c' ]);
         expect(arr).to.eql([ 'b', 'a', 'c' ]);
         expect(arr).not.to.equal(result);
@@ -945,13 +945,13 @@ describe('#keys', () => {
 describe('#splice', () => {
     it('returns new array with given items spliced in', () => {
         let arr = [ 'foo', 'bar', 'qux' ];
-        let result = splice(arr, 2, 0, 'bam', 'boom');
+        let result = splice(2, 0, 'bam', 'boom', arr);
         expect(result).to.eql([ 'foo', 'bar', 'bam', 'boom', 'qux' ]);
         expect(arr).to.eql([ 'foo', 'bar', 'qux' ]);
         expect(arr).not.to.equal(result);
         let sub = { foo: 'bar' };
         arr = [ sub, 'foo', 'bar', 'qux' ];
-        result = splice(arr, 3, 0, 'bam', 'boom');
+        result = splice(3, 0, 'bam', 'boom', arr);
         expect(result).to.eql([ sub, 'foo', 'bar', 'bam', 'boom', 'qux' ]);
         expect(arr).to.eql([ sub, 'foo', 'bar', 'qux' ]);
         expect(arr).not.to.equal(result);
@@ -976,16 +976,16 @@ describe('#concat', () => {
 describe('#includes', () => {
     it('returns boolean indicating if a given array contains a given value', () => {
         let arr = [ 'foo', 'bar' ];
-        let result = includes(arr, 'foo');
+        let result = includes('foo', arr);
         expect(result).to.eql(true);
         arr = [ 'foo', 'bar' ];
-        result = includes(arr, 'qux');
+        result = includes('qux', arr);
         expect(result).to.eql(false);
         let obj = {
             an: 'object'
         };
         arr = [ 'foo', obj, 'bar' ];
-        result = includes(arr, obj);
+        result = includes(obj, arr);
         expect(result).to.eql(true);
     });
 });
@@ -993,19 +993,19 @@ describe('#includes', () => {
 describe('#indexOf', () => {
     it('returns index of a given value in a given array', () => {
         let arr = [ 'foo', 'bar' ];
-        let result = indexOf(arr, 'foo');
+        let result = indexOf('foo', arr);
         expect(result).to.eql(0);
         arr = [ 'foo', 'bar' ];
-        result = indexOf(arr, 'bar');
+        result = indexOf('bar', arr);
         expect(result).to.eql(1);
         arr = [ 'foo', 'bar' ];
-        result = indexOf(arr, 'qux');
+        result = indexOf('qux', arr);
         expect(result).to.eql(-1);
         let obj = {
             an: 'object'
         };
         arr = [ 'foo', obj, 'bar' ];
-        result = indexOf(arr, obj);
+        result = indexOf(obj, arr);
         expect(result).to.eql(1);
     });
 });
@@ -1013,31 +1013,30 @@ describe('#indexOf', () => {
 describe('#lastIndexOf', () => {
     it('returns the last index of a given value in a given array', () => {
         let arr = [ 'foo', 'bar', 'foo' ];
-        let result = lastIndexOf(arr, 'foo');
+        let result = lastIndexOf('foo', arr);
         expect(result).to.eql(2);
         arr = [ 'foo', 'bar' ];
-        result = lastIndexOf(arr, 'qux');
+        result = lastIndexOf('qux', arr);
         expect(result).to.eql(-1);
         let obj = {
             an: 'object'
         };
         arr = [ 'foo', obj, 'bar', obj ];
-        result = lastIndexOf(arr, obj);
+        result = lastIndexOf(obj, arr);
         expect(result).to.eql(3);
     });
 });
 
 describe('#join', () => {
     it('returns a string containing elements of given array joined by a given delimiter', () => {
-        expect(join([ 'foo', 'bar', 'baz' ], '-')).to.eql('foo-bar-baz');
+        expect(join('-', [ 'foo', 'bar', 'baz' ])).to.eql('foo-bar-baz');
     });
 });
 
 describe('#slice', () => {
     it('returns a new array from given start index up until given end index', () => {
-        expect(slice([ 1, 2, 3, 4 ], 1, 3)).to.eql([ 2, 3 ]);
-        expect(slice([ 1, 2, 3, 4 ], 1)).to.eql([ 2, 3, 4 ]);
-        // TODO: test immutability
+        expect(slice(1, 3, [ 1, 2, 3, 4 ])).to.eql([ 2, 3 ]);
+        expect(slice(1, Infinity, [ 1, 2, 3, 4 ])).to.eql([ 2, 3, 4 ]);
     });
 });
 
@@ -1050,51 +1049,48 @@ describe('#entries', () => {
 
 describe('#every', () => {
     it('returns boolean indicating if given predicate returns true for each element in a given array', () => {
-        expect(every([ 1, 2, 3 ], v => typeof v === 'number')).to.be.true;
-        expect(every([ 1, 'foo', 3 ], v => typeof v === 'number')).to.be.false;
+        expect(every(v => typeof v === 'number', [ 1, 2, 3 ])).to.be.true;
+        expect(every(v => typeof v === 'number', [ 1, 'foo', 3 ])).to.be.false;
     });
     it('is null safe', () => {
         // null defaults to empty array and we get true because all 0 members pass the predicate
         // TODO: reconsider this behavior
-        expect(every(null, v => typeof v === 'number')).to.be.true;
+        expect(every(v => typeof v === 'number', null)).to.be.true;
     });
 });
 
 describe('#filter', () => {
     it('returns new array containing only elements of given array which pass given predicate', () => {
-        expect(filter([ 1, 2, 3 ], v => v % 2)).to.eql([ 1, 3 ]);
-        // TODO: test immutability
+        expect(filter(v => v % 2, [ 1, 2, 3 ])).to.eql([ 1, 3 ]);
     });
     it('is null safe', () => {
-        expect(filter(null, v => typeof v === 'number')).to.eql([]);
+        expect(filter(v => typeof v === 'number', null)).to.eql([]);
     });
 });
 
 describe('#find', () => {
     it('returns first element from given array which matches predicate', () => {
-        expect(find([ 1, 2, 3 ], v => v === 2)).to.eql(2);
-        // TODO: test immutability
+        expect(find(v => v === 2, [ 1, 2, 3 ])).to.eql(2);
     });
     it('is null safe', () => {
-        expect(find(null, v => v === 'foo')).to.be.undefined;
+        expect(find(v => v === 'foo', null)).to.be.undefined;
     });
 });
 
 describe('#findIndex', () => {
     it('returns index of first element from given array which matches predicate', () => {
-        expect(findIndex([ 1, 2, 3 ], v => v === 2)).to.eql(1);
-        // TODO: test immutability
+        expect(findIndex(v => v === 2, [ 1, 2, 3 ])).to.eql(1);
     });
     it('is null safe', () => {
         // TODO: reconsider decision to expose native behavior ... maybe nil instead of -1?
-        expect(findIndex(null, v => v === 'foo')).to.eql(-1);
+        expect(findIndex(v => v === 'foo', null)).to.eql(-1);
     });
 });
 
 describe('#forEach', () => {
     it('iterates over each element in a given array', () => {
         const result = [];
-        forEach([ 'foo', 'bar' ], (v, i) => result.push([ i, v ]));
+        forEach((v, i) => result.push([ i, v ]), [ 'foo', 'bar' ]);
         expect(result).to.eql([ [ 0, 'foo' ], [ 1, 'bar' ] ]);
         // TODO - more tests
     });
@@ -1102,41 +1098,42 @@ describe('#forEach', () => {
 
 describe('#map', () => {
     it('returns a new array with values of given array mapped to given function', () => {
-        expect(map([ 'foo', 'bar' ], v => v + 'boom')).to.eql([ 'fooboom', 'barboom' ]);
+        expect(map(v => v + 'boom', [ 'foo', 'bar' ])).to.eql([ 'fooboom', 'barboom' ]);
         // TODO - more tests
     });
     it('is null safe', () => {
-        expect(map(null, v => v)).to.eql([]);
+        expect(map(v => v, null)).to.eql([]);
     });
 });
 
 describe('#reduce', () => {
+    // TODO: should test for skipping undefined elements in sparse arrays
     it('returns a new accumulated value based on given array and a reducing function', () => {
         expect(reduce([ 'foo', 'bar', 'baz' ], (a = '', v) => (a += v, a))).to.eql('foobarbaz');
         // TODO - more tests
     });
     it('is null safe', () => {
-        expect(reduce(null, (a, v) => '' + a + v, 'foo')).to.eql('foo');
+        expect(reduce((a, v) => '' + a + v, null, 'foo')).to.eql('foo');
     });
 });
 
 describe('#reduceRight', () => {
     it('same as reduce but works right to left', () => {
-        expect(reduceRight([ 'foo', 'bar', 'baz' ], (a = '', v) => (a += v, a))).to.eql('bazbarfoo');
+        expect(reduceRight((a = '', v) => (a += v, a), [ 'foo', 'bar', 'baz' ])).to.eql('bazbarfoo');
         // TODO - more tests
     });
     it('is null safe', () => {
-        expect(reduceRight(null, (a, v) => '' + a + v, 'foo')).to.eql('foo');
+        expect(reduceRight((a, v) => '' + a + v, null, 'foo')).to.eql('foo');
     });
 });
 
 describe('#some', () => {
     it('returns boolean indicating if given predicate returns true for each element in a given array', () => {
-        expect(some([ 'foo', 'bar', 3 ], v => typeof v === 'number')).to.be.true;
-        expect(some([ 'foo', 'bar', 'baz' ], v => typeof v === 'number')).to.be.false;
+        expect(some(v => typeof v === 'number', [ 'foo', 'bar', 3 ])).to.be.true;
+        expect(some(v => typeof v === 'number', [ 'foo', 'bar', 'baz' ])).to.be.false;
     });
     it('is null safe', () => {
-        expect(some(null, v => typeof v === 'number')).to.be.false;
+        expect(some(v => typeof v === 'number', null)).to.be.false;
     });
 });
 
