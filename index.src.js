@@ -1,7 +1,16 @@
 'use strict';
 const _ = exports;
-const { clone } = require('mediary');
-_.clone = clone;
+
+/**
+ * Fast, cheap & deep clone-like objects courtesy of [mediary](https://www.npmjs.com/package/mediary).
+ *
+ * @since 1.6.0
+ * @name clone
+ * @param {*} value Value to clone.
+ * @returns {*} Returns cloned Object, Array or passes thru other values
+ * @see deepClone
+ */
+_.clone = require('mediary').clone;
 
 /**
  * A safe reference to `undefined`.
@@ -324,6 +333,7 @@ _.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
  * @since 1.5.0
  * @function clone
  * @param {*} value Value to clone.
+ * @returns {*} Returns cloned Object, Array or passes thru other values
  */
 _.deepClone = x => _.isArray(x)
     ? [ ...x ].map(_.deepClone)
@@ -410,7 +420,7 @@ _.deepClone = x => _.isArray(x)
  * // => [1, 4, 3, 4]
  */
     'splice'
-].forEach((k, r) => _[k] = (v, ...args) => (r = clone(v) || [], [][k].apply(r, args), r));
+].forEach((k, r) => _[k] = (v, ...args) => (r = _.clone(v) || [], [][k].apply(r, args), r));
 
 [
 /**
@@ -427,9 +437,16 @@ _.deepClone = x => _.isArray(x)
     'concat',
 
 /**
- * TODO
+ * Joins all elements of an array into a string.
  *
  * @function join
+ * @param {Array} array Array to join.
+ * @param {string} separator String which separates each pair of adjacent elements of the array.
+ * @returns {Array} Returns string with all elements of array joined. If given array is empty, returns empty string.
+ * @example
+ *
+ * join([ 'a', 'b', 'c' ], '-');
+ * // => 'a-b-c'
  */
     'join',
 
@@ -502,7 +519,7 @@ _.deepClone = x => _.isArray(x)
  * @function some
  */
     'some'
-].forEach(k => _[k] = (v, ...args) => [][k].apply(clone(v) || [], args.map(clone)));
+].forEach(k => _[k] = (v, ...args) => [][k].apply(_.clone(v) || [], args.map(_.clone)));
 
 [
 /**
@@ -541,7 +558,7 @@ _.deepClone = x => _.isArray(x)
  * @function shift
  */
     'shift'
-].forEach(k => _[k] = v => clone(v)[k]());
+].forEach(k => _[k] = v => _.clone(v)[k]());
 
 [
 /**
@@ -571,7 +588,7 @@ _.deepClone = x => _.isArray(x)
  *
  * @function sort
  */
-_.sort = (v, fn) => clone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
+_.sort = (v, fn) => _.clone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
 
 /**
  * TODO
@@ -689,7 +706,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
             : {}
         : mutate
             ? o
-            : clone(o) || {};
+            : _.clone(o) || {};
     let cursor = result;
     while (kp.length) {
         let c = kp.shift();
@@ -707,7 +724,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
  */
 _.assoc = (o, p, v, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? c[k] = v
-    : c[k] = clone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
+    : c[k] = _.clone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
 
 /**
  * TODO
@@ -718,7 +735,7 @@ _.dissoc = (o, p, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? _.isArray(c)
         ? c.splice(_.isNil(n), c.length)
         : (delete c[k])
-    : c[k] = clone(c[k]) || {}), m);
+    : c[k] = _.clone(c[k]) || {}), m);
 
 /**
  * TODO
