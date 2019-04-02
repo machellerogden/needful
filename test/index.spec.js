@@ -58,7 +58,7 @@ const {
     isEqiv,
     isEqual,
     merge
-} = require(process.env.USE_SRC ? './index.src' : './dist/needful');
+} = require(process.env.USE_SRC ? '../src/index' : '../dist/index');
 
 describe('#nil', () => {
     it('nil is a safe reference to undefined', () => {

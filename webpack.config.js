@@ -1,18 +1,18 @@
 const path = require('path');
 
 module.exports = {
-    entry: './index.src.js',
+    entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        globalObject: 'eval(0, "this")',
+        globalObject: 'this',
         library: 'needful',
         libraryTarget: 'umd',
-        filename: 'needful.js'
+        filename: 'index.js'
     },
     module: {
         rules: [
             {
-                test: /\index.src.js$/,
+                test: /\.js$/,
                 use: {
                     loader: 'babel-loader',
                     options: {

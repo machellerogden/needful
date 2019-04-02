@@ -10,9 +10,9 @@
   "scripts": {
     "build": "webpack --mode production",
     "pretest": "npm run build",
-    "test": "mocha index.spec.js",
+    "test": "mocha test/*.spec.js",
     "coverage": "USE_SRC=true nyc --reporter lcov npm test",
-    "generate-docs": "jsdoc2md --template README.hbs --files ./index.src.js > README.md",
+    "generate-docs": "jsdoc2md --template README.hbs --files ./src/index.js > README.md",
     "clean-check": "git diff --exit-code 2>/dev/null && git diff --cached --exit-code 2>/dev/null || echo 'Please commit changes before publishing.'",
     "prepare": "npm run test && npm run generate-docs && npm run clean-check"
   },
@@ -45,6 +45,6 @@
     "test"
   ],
   "dependencies": {
-    "mediary": "^0.2.11"
+    "mediary": "^0.3.0"
   }
 }

@@ -10,7 +10,7 @@ const _ = exports;
  * @returns {*} Returns cloned Object, Array or passes thru other values
  * @see deepClone
  */
-_.clone = require('mediary').clone;
+_.clone = require('mediary/src').clone;
 
 /**
  * A safe reference to `undefined`.
