@@ -43,7 +43,7 @@ Needful does the needful, and no more.
 ## nil : <code>undefined</code>
 A safe reference to `undefined`.
 
-While it rarely happens in practice, `undefined` is not a keyword and it possible for it to be shadowed.
+While it rarely happens in practice, `undefined` is not a keyword and it is possible for it to be shadowed. Use `nil` and avoid the concern entirely.
 
 **Kind**: global variable  
 **See**: isNil, notNil  
@@ -78,7 +78,7 @@ A convenient reference to `Array.isArray`.
 <a name="is"></a>
 
 ## is(value, type) ⇒ <code>boolean</code>
-Checks if `value` is of `type`.
+Checks if `value` is of `type`. It's just JavaScript's `typeof` keyword, as a function.
 
 **Kind**: global function  
 **Returns**: <code>boolean</code> - Returns `true` if `value` is of given `type`, else `false`.  
@@ -710,85 +710,86 @@ TODO
 <a name="isEquiv"></a>
 
 ## isEquiv()
-TODO
+Returns true if two given values are equivalent.
 
 **Kind**: global function  
 <a name="pipe"></a>
 
 ## pipe()
-TODO
+Performs left-to-right function composition.
 
 **Kind**: global function  
 <a name="compose"></a>
 
 ## compose()
-TODO
+Performs right-to-left function composition.
 
 **Kind**: global function  
 <a name="isEmpty"></a>
 
 ## isEmpty()
-TODO
+A predicate for determining if a given value is "empty". Returns true for empty strings, empty arrays, empty objects as well as for `null` or `undefined`.
 
 **Kind**: global function  
 <a name="castPath"></a>
 
 ## castPath()
-TODO
+Converts a keypath string to an array representation of the keypath. Given an array, the array will be shallow-cloned and returned otherwise unchanged.
 
 **Kind**: global function  
 <a name="get"></a>
 
 ## get()
-TODO
+Get the value at a given keypath within an given object. If a third argument is supplied, the value of that argument will be used as a default.
 
 **Kind**: global function  
 <a name="has"></a>
 
 ## has()
-TODO
+Returns a truthy value indicating presence or absence of the value at a given keypath in a given object.
 
 **Kind**: global function  
 <a name="walkPath"></a>
 
 ## walkPath()
-TODO
+Walk a given object along a given keypath and apply a given function to each intermediate value.
 
 **Kind**: global function  
 <a name="assoc"></a>
 
 ## assoc()
-TODO
+Set a value at a given keypath within an given object. Returns a new object. Original is unchanged.
 
 **Kind**: global function  
 <a name="dissoc"></a>
 
 ## dissoc()
-TODO
+Unset a value at a given keypath within an given object. Returns a new object. Original is unchanged.
 
 **Kind**: global function  
 <a name="set"></a>
 
 ## set()
-TODO
+Set a value at a given keypath within an given object. Warning: Mutates the given object! Use `assoc` for an immutable version.
 
 **Kind**: global function  
+**See**: assoc  
 <a name="drop"></a>
 
 ## drop()
-TODO
+Unsets a value at a given keypath within an given object. Warning: Mutates the given object! Use `dissoc` for an immutable version.
 
 **Kind**: global function  
 <a name="assign"></a>
 
 ## assign()
-TODO
+A convenient reference to `Object.assign`.
 
 **Kind**: global function  
 <a name="merge"></a>
 
 ## merge()
-TODO
+Performs a deep merge of all given objects.
 
 **Kind**: global function  
 # See Also

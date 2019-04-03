@@ -4,7 +4,7 @@ const _ = exports;
 /**
  * A safe reference to `undefined`.
  *
- * While it rarely happens in practice, `undefined` is not a keyword and it possible for it to be shadowed.
+ * While it rarely happens in practice, `undefined` is not a keyword and it is possible for it to be shadowed. Use `nil` and avoid the concern entirely.
  *
  * @since 1.2.0
  * @name nil
@@ -24,7 +24,7 @@ _.nil = void 0;
 _.isArray = Array.isArray;
 
 /**
- * Checks if `value` is of `type`.
+ * Checks if `value` is of `type`. It's just JavaScript's `typeof` keyword, as a function.
  *
  * @since 1.0.0
  * @function is
@@ -613,7 +613,7 @@ _.and = (...args) => _.reduce(args, (a, b) => _.isFalsy(a) ? a : b);
 _.or = (...args) => _.reduce(args, (a, b) => _.isFalsy(a) ? b : a);
 
 /**
- * TODO
+ * Returns true if two given values are equivalent.
  *
  * @function isEquiv
  */
@@ -632,21 +632,21 @@ _.isEqiv = (a, b) => {
 };
 
 /**
- * TODO
+ * Performs left-to-right function composition.
  *
  * @function pipe
  */
 _.pipe = (first, ...rest) => (...args) => _.reduce(rest, (acc, fn) => fn(acc), first(...args));
 
 /**
- * TODO
+ * Performs right-to-left function composition.
  *
  * @function compose
  */
 _.compose = (...fns) => ((f) => (...args) => _.pipe(...f)(...args))(_.reverse([ ...fns ]));
 
 /**
- * TODO
+ * A predicate for determining if a given value is "empty". Returns true for empty strings, empty arrays, empty objects as well as for `null` or `undefined`.
  *
  * @function isEmpty
  */
@@ -657,7 +657,7 @@ _.isEmpty = v => _.isArray(v) || _.isString(v)
         : _.isNil(v);
 
 /**
- * TODO
+ * Converts a keypath string to an array representation of the keypath. Given an array, the array will be shallow-cloned and returned otherwise unchanged.
  *
  * @function castPath
  */
@@ -688,21 +688,21 @@ _.castPath = v => {
 };
 
 /**
- * TODO
+ * Get the value at a given keypath within an given object. If a third argument is supplied, the value of that argument will be used as a default.
  *
  * @function get
  */
 _.get = (o, p, d) => _.pipe(_.castPath, _.partialRight(_.reduce, (a, k) => _.isObject(a) && a[k] || _.nil, o))(p) || d;
 
 /**
- * TODO
+ * Returns a truthy value indicating presence or absence of the value at a given keypath in a given object.
  *
  * @function has
  */
 _.has = (o, p) => _.pipe(_.isNil, _.not)(_.get(o, p));
 
 /**
- * TODO
+ * Walk a given object along a given keypath and apply a given function to each intermediate value.
  *
  * @function walkPath
  */
@@ -726,7 +726,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
 };
 
 /**
- * TODO
+ * Set a value at a given keypath within an given object. Returns a new object. Original is unchanged.
  *
  * @function assoc
  */
@@ -735,7 +735,7 @@ _.assoc = (o, p, v, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     : c[k] = _.clone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
 
 /**
- * TODO
+ * Unset a value at a given keypath within an given object. Returns a new object. Original is unchanged.
  *
  * @function dissoc
  */
@@ -746,28 +746,29 @@ _.dissoc = (o, p, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     : c[k] = _.clone(c[k]) || {}), m);
 
 /**
- * TODO
+ * Set a value at a given keypath within an given object. Warning: Mutates the given object! Use `assoc` for an immutable version.
  *
  * @function set
+ * @see assoc
  */
 _.set = _.partialRight(_.assoc, true);
 
 /**
- * TODO
+ * Unsets a value at a given keypath within an given object. Warning: Mutates the given object! Use `dissoc` for an immutable version.
  *
  * @function drop
  */
 _.drop = _.partialRight(_.dissoc, true);
 
 /**
- * TODO
+ * A convenient reference to `Object.assign`.
  *
  * @function assign
  */
 _.assign = Object.assign;
 
 /**
- * TODO
+ * Performs a deep merge of all given objects.
  *
  * @function merge
  */
