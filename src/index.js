@@ -2,17 +2,6 @@
 const _ = exports;
 
 /**
- * Fast, cheap & deep clone-like objects courtesy of [mediary](https://www.npmjs.com/package/mediary).
- *
- * @since 1.6.0
- * @name clone
- * @param {*} value Value to clone.
- * @returns {*} Returns cloned Object, Array or passes thru other values
- * @see deepClone
- */
-_.clone = require('mediary/src').clone;
-
-/**
  * A safe reference to `undefined`.
  *
  * While it rarely happens in practice, `undefined` is not a keyword and it possible for it to be shadowed.
@@ -334,12 +323,24 @@ _.partialRight = (fn, ...args) => (...rest) => fn(...[ ...rest, ...args ]);
  * @function clone
  * @param {*} value Value to clone.
  * @returns {*} Returns cloned Object, Array or passes thru other values
+ * @see clone
  */
 _.deepClone = x => _.isArray(x)
     ? [ ...x ].map(_.deepClone)
     : _.isObject(x)
         ? Object.entries({ ...x }).reduce((a, [k, v]) => (a[k] = _.deepClone(v), a), {})
         : x;
+
+/**
+ * Fast, cheap & deep clone-like objects courtesy of [mediary](https://www.npmjs.com/package/mediary).
+ *
+ * @since 1.6.0
+ * @name clone
+ * @param {*} value Value to clone.
+ * @returns {*} Returns cloned Object, Array or passes thru other values
+ * @see deepClone
+ */
+_.clone = require('mediary/src').clone;
 
 [
 
@@ -451,9 +452,16 @@ _.deepClone = x => _.isArray(x)
     'join',
 
 /**
- * TODO
- *
+ * Returns a new array from given start index up until given end index.
  * @function slice
+ * @param {Array} array Array to slice.
+ * @param {number} start Start index
+ * @param {number} end End index (selects up to but does not include end index)
+ * @returns {Array} Returns new array containing elements between `start` and `end` index of `array`.
+ * @example
+ *
+ * slice([ 1, 2, 3, 4 ], 1, 3);
+ * // => [ 2, 3 ]
  */
     'slice',
 

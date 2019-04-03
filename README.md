@@ -1,35 +1,53 @@
 # Needful
 
-> Needful is a functionally-flavored micro library written in ECMAScript 2018.
+> Needful is a functionally-flavored micro library for the modern, pragmatic JavaScript developer.
 
 [![Version](https://img.shields.io/npm/v/needful.svg)]() [![Travis](https://img.shields.io/travis/machellerogden/needful.svg)]() [![License](https://img.shields.io/npm/l/needful.svg)]()
+
+# Why use Needful?
+
+## Small
+
+Needful exports a single 10kb UMD which covers the 90% use-case for functional-style JavaScript programming. It has equivalents to all the most useful parts of lodash (such as keypath operations) without all the pieces you probably don't need.
+
+## Simple
+
+Don't get mired in incidental complexity. Why waste cycles deliberating over how to most efficiently include lodash in your build, or fussing over whether you should use lodash-fp or lodash-es. Just pull in Needful and keep working the essential problem.
+
+## Smart
+
+Needful is clojurist-friendly. `0` == `true`. Also, immutability is baked-in. And, what's more, it uses structural sharing to give your code the best space and time complexity available. (Courtesy of [mediary](https://www.npmjs.com/package/mediary).)
+
+# Why not use lodash / ramda / underscore?
+
+No one's stopping you.
+
+Do you want a feature that Needful is missing? **Use [Lodash](https://lodash.com/).** It's got you covered.
+
+Need automatic currying? **Use [Ramda](https://ramdajs.com/).** It's got your back.
+
+Want something time-tested and battle-hardened? **Use [Underscore](https://underscorejs.org/).** It's been around forever—and it works.
+
+Needful is smaller (~10kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
+
+Needful does the needful, and no more.
 
 > You can't always get what you want
 > But if you try sometimes you just might find
 > You get what you need
 
-# A few reasons to use Needful:
-
-* One tiny little UMD that covers the 90% use-case for functional-style JavaScript programming.
-* All of the same `Array.prototype` methods you already know, but as immutable functions.
-* Some of the most useful parts of lodash (such as keypath operations) without all the pieces you probably don't need.
-* You understand how useful it is when `0` == `true` (clojurist-friendly)
-* Did we mention immutability (with structural sharing courtest of [mediary](https://www.npmjs.com/package/mediary))?
-
-# Why not use lodash / ramda / underscore?
-
-Do you want a feature that Needful is missing? Use [Lodash](https://lodash.com/). It's got you covered.
-
-Need automatic currying? Use [Ramda](https://ramdajs.com/). It's got your back.
-
-Want something time-tested and battle-hardened? Use [Underscore](https://underscorejs.org/). It's been around forever—and it works.
-
-Needful is smaller (~16kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
-
-Needful does the needful, and no more.
-
 # API
 
+<a name="nil"></a>
+
+## nil : <code>undefined</code>
+A safe reference to `undefined`.
+
+While it rarely happens in practice, `undefined` is not a keyword and it possible for it to be shadowed.
+
+**Kind**: global variable  
+**See**: isNil, notNil  
+**Since**: 1.2.0  
 <a name="clone"></a>
 
 ## clone ⇒ <code>\*</code>
@@ -44,16 +62,6 @@ Fast, cheap & deep clone-like objects courtesy of [mediary](https://www.npmjs.co
 | --- | --- | --- |
 | value | <code>\*</code> | Value to clone. |
 
-<a name="nil"></a>
-
-## nil : <code>undefined</code>
-A safe reference to `undefined`.
-
-While it rarely happens in practice, `undefined` is not a keyword and it possible for it to be shadowed.
-
-**Kind**: global variable  
-**See**: isNil, notNil  
-**Since**: 1.2.0  
 <a name="isArray"></a>
 
 ## isArray(value) ⇒ <code>boolean</code>
@@ -420,6 +428,7 @@ Deeply clones plain objects and arrays. Primitives are passed through unchanged.
 
 **Kind**: global function  
 **Returns**: <code>\*</code> - Returns cloned Object, Array or passes thru other values  
+**See**: clone  
 **Since**: 1.5.0  
 
 | Param | Type | Description |
@@ -561,10 +570,23 @@ join([ 'a', 'b', 'c' ], '-');
 ```
 <a name="slice"></a>
 
-## slice()
-TODO
+## slice(array, start, end) ⇒ <code>Array</code>
+Returns a new array from given start index up until given end index.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array containing elements between `start` and `end` index of `array`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array to slice. |
+| start | <code>number</code> | Start index |
+| end | <code>number</code> | End index (selects up to but does not include end index) |
+
+**Example**  
+```js
+slice([ 1, 2, 3, 4 ], 1, 3);
+// => [ 2, 3 ]
+```
 <a name="every"></a>
 
 ## every()
