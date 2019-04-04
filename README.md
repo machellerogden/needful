@@ -8,7 +8,7 @@
 
 ## Small
 
-Needful exports a single 10kb UMD which covers the 90% use-case for functional-style JavaScript programming. It has equivalents to all the most useful parts of lodash (such as keypath operations) without all the pieces you probably don't need.
+Needful exports a single 11kb UMD which covers the 90% use-case for functional-style JavaScript programming. It has equivalents to all the most useful parts of lodash (such as keypath operations) without all the pieces you probably don't need.
 
 ## Simple
 
@@ -28,7 +28,7 @@ Need automatic currying? **Use [Ramda](https://ramdajs.com/).** It's got your ba
 
 Want something time-tested and battle-hardened? **Use [Underscore](https://underscorejs.org/).** It's been around forever—and it works.
 
-Needful is smaller (~10kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
+Needful is smaller (11kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
 
 Needful does the needful, and no more.
 
@@ -317,6 +317,19 @@ Checks if `value` is a number.
 **Kind**: global function  
 **Returns**: <code>boolean</code> - Returns true when `value` of type 'number'.  
 **Since**: 0.0.2  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>\*</code> | The value to check. |
+
+<a name="isNumeric"></a>
+
+## isNumeric(value) ⇒ <code>boolean</code>
+Checks if `value` is a number or a string which can be parsed as a valid number. Faster than a regex.
+
+**Kind**: global function  
+**Returns**: <code>boolean</code> - Returns true when `value` is of type 'number' or is a string which can be parsed as a number.  
+**Since**: 1.8.0  
 
 | Param | Type | Description |
 | --- | --- | --- |

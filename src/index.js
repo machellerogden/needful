@@ -1,5 +1,6 @@
 'use strict';
 const _ = exports;
+const numberTypes = new Set(['string', 'number']);
 
 /**
  * A safe reference to `undefined`.
@@ -234,6 +235,16 @@ _.isString = v => _.is(v, 'string');
  * @returns {boolean} Returns true when `value` of type 'number'.
  */
 _.isNumber = v => _.is(v, 'number');
+
+/**
+ * Checks if `value` is a number or a string which can be parsed as a valid number. Faster than a regex.
+ *
+ * @since 1.8.0
+ * @function isNumeric
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns true when `value` is of type 'number' or is a string which can be parsed as a number.
+ */
+_.isNumeric = n => numberTypes.has(typeof n) && !isNaN(parseInt(n, 10)) && isFinite(n);
 
 /**
  * Checks if `value` is a boolean.
@@ -684,7 +695,7 @@ _.castPath = v => {
     const result = [];
     let value = '';
     let i = 0;
-    const set = v => (result.push(/^[0-9]+$/.test(v) ? +v : v), value = '');
+    const set = v => (result.push(_.isNumeric(v) ? +v : v), value = '');
     while (i < chars.length) {
         if ([ '.', '[', ']' ].includes(chars[i])) {
             if (i++ === 0) continue;
