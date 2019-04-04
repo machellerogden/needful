@@ -7,7 +7,8 @@ module.exports = {
         globalObject: 'this',
         library: 'needful',
         libraryTarget: 'umd',
-        filename: 'index.js'
+        umdNamedDefine: true,
+        filename: 'needful.js'
     },
     module: {
         rules: [

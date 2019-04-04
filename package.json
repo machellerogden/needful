@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/machellerogden/needful.git"
   },
-  "main": "dist/index.js",
+  "main": "dist/needful.js",
   "scripts": {
     "build": "webpack --mode production",
     "pretest": "npm run build",

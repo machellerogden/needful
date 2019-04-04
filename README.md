@@ -574,11 +574,11 @@ join([ 'a', 'b', 'c' ], '-');
 Returns a new array from given start index up until given end index.
 
 **Kind**: global function  
-**Returns**: <code>Array</code> - Returns new array containing elements between `start` and `end` index of `array`.  
+**Returns**: <code>Array</code> - Returns new array containing elements between `start` and `end` index of `array`  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| array | <code>Array</code> | Array to slice. |
+| array | <code>Array</code> | Array to slice |
 | start | <code>number</code> | Start index |
 | end | <code>number</code> | End index (selects up to but does not include end index) |
 
@@ -589,16 +589,42 @@ slice([ 1, 2, 3, 4 ], 1, 3);
 ```
 <a name="every"></a>
 
-## every()
-TODO
+## every(array, predicate) ⇒ <code>boolean</code>
+Tests whether all elements in the array pass the test implemented by the given predicate function.
 
 **Kind**: global function  
+**Returns**: <code>boolean</code> - Returns boolean indicating whether or not every element in `array` satisfies `predicate`  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array to test |
+| predicate | <code>function</code> | Predicate function |
+
+**Example**  
+```js
+every([ 1, 2, 3 ], v => typeof v === 'number');
+// => true
+every([ 1, 'foo', 3 ], v => typeof v === 'number');
+// => false
+```
 <a name="filter"></a>
 
-## filter()
-TODO
+## filter(array, predicate) ⇒ <code>Array</code>
+Returns new array containing only elements of given array which pass given predicate.
 
 **Kind**: global function  
+**Returns**: <code>Array</code> - Returns new array containing only the element of the original array whose values pass the test implemented by the given predicate function.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array to filter |
+| predicate | <code>function</code> | Predicate function |
+
+**Example**  
+```js
+filter([ 1, 2, 3 ], v => v % 2);
+// => [ 1, 3 ]
+```
 <a name="find"></a>
 
 ## find()

@@ -453,11 +453,12 @@ _.clone = require('mediary/src').clone;
 
 /**
  * Returns a new array from given start index up until given end index.
+ *
  * @function slice
- * @param {Array} array Array to slice.
+ * @param {Array} array Array to slice
  * @param {number} start Start index
  * @param {number} end End index (selects up to but does not include end index)
- * @returns {Array} Returns new array containing elements between `start` and `end` index of `array`.
+ * @returns {Array} Returns new array containing elements between `start` and `end` index of `array`
  * @example
  *
  * slice([ 1, 2, 3, 4 ], 1, 3);
@@ -466,16 +467,32 @@ _.clone = require('mediary/src').clone;
     'slice',
 
 /**
- * TODO
+ * Tests whether all elements in the array pass the test implemented by the given predicate function.
  *
  * @function every
+ * @param {Array} array Array to test
+ * @param {Function} predicate Predicate function
+ * @returns {boolean} Returns boolean indicating whether or not every element in `array` satisfies `predicate`
+ * @example
+ *
+ * every([ 1, 2, 3 ], v => typeof v === 'number');
+ * // => true
+ * every([ 1, 'foo', 3 ], v => typeof v === 'number');
+ * // => false
  */
     'every',
 
 /**
- * TODO
+ * Returns new array containing only elements of given array which pass given predicate.
  *
  * @function filter
+ * @param {Array} array Array to filter
+ * @param {Function} predicate Predicate function
+ * @returns {Array} Returns new array containing only the element of the original array whose values pass the test implemented by the given predicate function.
+ * @example
+ *
+ * filter([ 1, 2, 3 ], v => v % 2);
+ * // => [ 1, 3 ]
  */
     'filter',
 
