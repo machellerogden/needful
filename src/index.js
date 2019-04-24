@@ -342,17 +342,6 @@ _.deepClone = x => _.isArray(x)
         ? Object.entries({ ...x }).reduce((a, [k, v]) => (a[k] = _.deepClone(v), a), {})
         : x;
 
-/**
- * Fast, cheap & deep clone-like objects courtesy of [mediary](https://www.npmjs.com/package/mediary).
- *
- * @since 1.6.0
- * @name clone
- * @param {*} value Value to clone.
- * @returns {*} Returns cloned Object, Array or passes thru other values
- * @see deepClone
- */
-_.clone = require('mediary/src').clone;
-
 [
 
 /**
@@ -432,7 +421,7 @@ _.clone = require('mediary/src').clone;
  * // => [1, 4, 3, 4]
  */
     'splice'
-].forEach((k, r) => _[k] = (v, ...args) => (r = _.clone(v) || [], [][k].apply(r, args), r));
+].forEach((k, r) => _[k] = (v, ...args) => (r = _.deepClone(v) || [], [][k].apply(r, args), r));
 
 [
 /**
@@ -555,7 +544,7 @@ _.clone = require('mediary/src').clone;
  * @function some
  */
     'some'
-].forEach(k => _[k] = (v, ...args) => [][k].apply(_.clone(v) || [], args.map(_.clone)));
+].forEach(k => _[k] = (v, ...args) => [][k].apply(_.deepClone(v) || [], args.map(_.deepClone)));
 
 [
 /**
@@ -594,7 +583,7 @@ _.clone = require('mediary/src').clone;
  * @function shift
  */
     'shift'
-].forEach(k => _[k] = v => _.clone(v)[k]());
+].forEach(k => _[k] = v => _.deepClone(v)[k]());
 
 [
 /**
@@ -624,7 +613,7 @@ _.clone = require('mediary/src').clone;
  *
  * @function sort
  */
-_.sort = (v, fn) => _.clone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
+_.sort = (v, fn) => _.deepClone(v).sort(_.every(v, _.isNumber) ? (a, b) => a - b : fn);
 
 /**
  * TODO
@@ -742,7 +731,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
             : {}
         : mutate
             ? o
-            : _.clone(o) || {};
+            : _.deepClone(o) || {};
     let cursor = result;
     while (kp.length) {
         let c = kp.shift();
@@ -760,7 +749,7 @@ _.walkPath = (o, p, fn, mutate = false) => {
  */
 _.assoc = (o, p, v, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? c[k] = v
-    : c[k] = _.clone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
+    : c[k] = _.deepClone(_.isNil(c[k]) && _.isNumber(n) ? [] : c[k]) || {}), m);
 
 /**
  * Unset a value at a given keypath within an given object. Returns a new object. Original is unchanged.
@@ -771,7 +760,7 @@ _.dissoc = (o, p, m = false) => _.walkPath(o, p, (c, k, n) => (_.isNil(n)
     ? _.isArray(c)
         ? c.splice(_.isNil(n), c.length)
         : (delete c[k])
-    : c[k] = _.clone(c[k]) || {}), m);
+    : c[k] = _.deepClone(c[k]) || {}), m);
 
 /**
  * Set a value at a given keypath within an given object. Warning: Mutates the given object! Use `assoc` for an immutable version.
@@ -802,8 +791,8 @@ _.assign = Object.assign;
  */
 _.merge = (...args) => _.reduce(args, (a, arg) => {
         _.forEach(_.entries(arg), ([ k, v ]) => {
-            if (_.isObject(v)) {
-                a[k] = _.merge(a[k] || (_.isArray(v) ? [] : {}), v);
+            if (_.isObject(a[k]) && _.isObject(v)) {
+                a[k] = _.merge(a[k], v);
             } else if (_.notNil(v)) {
                 a[k] = v;
             }

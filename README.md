@@ -8,7 +8,7 @@
 
 ## Small
 
-Needful exports a single 11kb UMD which covers the 90% use-case for functional-style JavaScript programming. It has equivalents to all the most useful parts of lodash (such as keypath operations) without all the pieces you probably don't need.
+Needful exports a single 7kb UMD which covers the 90% use-case for functional-style JavaScript programming. It has equivalents to all the most useful parts of lodash (such as keypath operations) without all the pieces you probably don't need.
 
 ## Simple
 
@@ -16,7 +16,7 @@ Don't get mired in incidental complexity. Why waste cycles deliberating over how
 
 ## Smart
 
-Needful is clojurist-friendly. `0` == `true`. Also, immutability is baked-in. And, what's more, it uses structural sharing to give your code the best space and time complexity available. (Courtesy of [mediary](https://www.npmjs.com/package/mediary).)
+Needful is clojurist-friendly. `0` == `true`. Also, immutability is baked-in.
 
 # Why not use lodash / ramda / underscore?
 
@@ -28,7 +28,7 @@ Need automatic currying? **Use [Ramda](https://ramdajs.com/).** It's got your ba
 
 Want something time-tested and battle-hardened? **Use [Underscore](https://underscorejs.org/).** It's been around forever—and it works.
 
-Needful is smaller (11kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
+Needful is smaller (7kb) and simpler (a single export) than its peers while still covering practically everything you'll need for effective functional-style JavaScript programming (over 5 dozen functions!).
 
 Needful does the needful, and no more.
 
@@ -48,20 +48,6 @@ While it rarely happens in practice, `undefined` is not a keyword and it is poss
 **Kind**: global variable  
 **See**: isNil, notNil  
 **Since**: 1.2.0  
-<a name="clone"></a>
-
-## clone ⇒ <code>\*</code>
-Fast, cheap & deep clone-like objects courtesy of [mediary](https://www.npmjs.com/package/mediary).
-
-**Kind**: global variable  
-**Returns**: <code>\*</code> - Returns cloned Object, Array or passes thru other values  
-**See**: deepClone  
-**Since**: 1.6.0  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>\*</code> | Value to clone. |
-
 <a name="isArray"></a>
 
 ## isArray(value) ⇒ <code>boolean</code>
