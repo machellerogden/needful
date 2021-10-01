@@ -14,7 +14,7 @@ const {
     isBoolean,
     isUndefined,
     isNull,
-    not, // TODO
+    not,
     partial,
     partialRight,
     pipe,
@@ -154,6 +154,13 @@ describe('#isFalsy', () => {
         expect(isFalsy({ foo: 'bar' })).to.be.false;
     });
 });
+
+describe('#not', () => {
+    it('is an alias for isFalsy', () => {
+        expect(not).to.equal(isFalsy);
+    });
+});
+
 
 describe('#isTruthy', () => {
     it('returns true if not null and not false', () => {
@@ -328,6 +335,7 @@ describe('#get', () => {
         expect(get({ foo: { bar: 'baz' } }, [ 'foo', 'bar' ])).to.equal('baz');
         expect(get({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 1, 'baz' ])).to.equal('qux');
         expect(get({ foo: [ "bar", { baz: "qux" } ] }, [ 'foo', 2, 'does', 'not', 'exist' ])).to.be.undefined;
+        expect(get({ foo: [ "bar", { baz: "qux", xyzzy: { a: [ 1, 2, 3 ] } } ] }, 'foo[1].xyzzy.a[2]')).to.equal(3);
     });
 });
 
