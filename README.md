@@ -626,10 +626,22 @@ filter([ 1, 2, 3 ], v => v % 2);
 ```
 <a name="find"></a>
 
-## find()
-TODO
+## find(array, predicate) ⇒ <code>\*</code>
+Returns deep clone of first element in array which pass given predicate.
 
 **Kind**: global function  
+**Returns**: <code>\*</code> - Returns clone of first element within array the original array whose values pass the test implemented by the given predicate function.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| array | <code>Array</code> | Array to search |
+| predicate | <code>function</code> | Predicate function |
+
+**Example**  
+```js
+find([ 1, 2, 3 ], v => v % 2);
+// => 1
+```
 <a name="findIndex"></a>
 
 ## findIndex()

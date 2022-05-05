@@ -502,7 +502,7 @@ _.deepClone = x => _.isArray(x)
  * @function find
  * @param {Array} array Array to search
  * @param {Function} predicate Predicate function
- * @returns {Array} Returns clone of first element within array the original array whose values pass the test implemented by the given predicate function.
+ * @returns {*} Returns clone of first element within array the original array whose values pass the test implemented by the given predicate function.
  * @example
  *
  * find([ 1, 2, 3 ], v => v % 2);
